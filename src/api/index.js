@@ -1,5 +1,5 @@
 /* 定义包含n个借口的函数的模块 */
 import ajax from "./ajax";
-const BASE=''
+//const BASE=''
 
-export const reqLogin=(username,password)=>ajax(BASE+'/login',{username,password},'POST')
+export const reqLogin=(username,password)=>ajax('/api/login',{username,password},'POST')

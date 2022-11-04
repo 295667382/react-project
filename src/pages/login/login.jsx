@@ -3,36 +3,35 @@ import { Button, Checkbox, Form, Input,message } from 'antd';
 import './login.less'
 import logo from '../../assets/images/logo.png'
 import { reqLogin } from '../../api';
+import { useNavigate} from 'react-router-dom'
+import MemoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils';
 
+function Login(){
+    const navigate = useNavigate()
 
-
-export default class login extends Component {
-    onFinish = async (values) => {
+    const onFinish = async (values) => { 
         const {username,password}=values
-        //reqLogin(username,password).then((res)=>{console.log("res",res)}).catch((err)=>{console.log(err)})
         const response=await reqLogin(username,password)
-        console.log(response)
         if(response.status===0){
-            console.log("登录成功")
-            message.info("登录成功")
-            
-            
+            //console.log("登录成功 this.props.history",this.props)
+            navigate('/')
+            //console.log("response",response)
+            message.info("登录成功")  
+            storageUtils.saveUser(response.data)
         }else{
-            console.log("登录失败")
             message.error("登录失败")
-        }
-        
-       
+        }    
       };
-    onFinishFailed = (errorInfo) => {
+     
+    const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
       /* handleClick=(e)=>{
         console.log("登录按钮",this.props)
       } */
       
-  render() {
-
+   
     const NameValidator = (rule, value, callback) => {
         if (value) {
           const nameLength = value.length
@@ -45,7 +44,7 @@ export default class login extends Component {
           return Promise.resolve()
         }
       };
-    
+   
     return (
       <div className="login">
         <div className="login-header">
@@ -61,9 +60,11 @@ export default class login extends Component {
             4). 必须是英文、数字或下划线组成 */}
             <h3>用户登录</h3>
             <Form name="basic" labelCol={{span: 8,}} wrapperCol={{ span: 16,}} initialValues={{remember: true,}}
-            onFinish={this.onFinish}
-            onFinishFailed={this.onFinishFailed}
+            /* onFinish={this.onFinish}
+            onFinishFailed={this.onFinishFailed} */
             autoComplete="off"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
             >
             <Form.Item
                 label="Username"
@@ -97,7 +98,7 @@ export default class login extends Component {
                 offset: 8,
                 span: 16,
                 }}>
-                <Button onClick={this.handleClick} className='loginbutton' type="primary" htmlType="submit">
+                <Button className='loginbutton' type="primary" htmlType="submit">
                 登录
                 </Button>
             </Form.Item>
@@ -106,4 +107,5 @@ export default class login extends Component {
       </div>
     )
   }
-}
+
+export default Login

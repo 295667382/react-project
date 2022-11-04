@@ -4,8 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter,Routes} from 'react-router-dom'
+import storageUtils from './utils/storageUtils';
+import memoryUtils from './utils/memoryUtils';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const user=storageUtils.getUser()
+console.log("我现在get的user",user)
+memoryUtils.user=user
+console.log("我现在get的memoryUtils.user",memoryUtils.user)
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
