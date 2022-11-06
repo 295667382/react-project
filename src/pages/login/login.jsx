@@ -15,10 +15,14 @@ function Login(){
         const response=await reqLogin(username,password)
         if(response.status===0){
             //console.log("登录成功 this.props.history",this.props)
-            navigate('/')
-            //console.log("response",response)
-            message.info("登录成功")  
             storageUtils.saveUser(response.data)
+            console.log("返回的response",response)
+            console.log("storageUtils.getUser",storageUtils.getUser())
+            message.info("登录成功")  
+            navigate('/')
+          
+           
+            
         }else{
             message.error("登录失败")
         }    
