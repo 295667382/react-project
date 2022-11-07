@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'antd'
 
 export default function ajax(url,data={},method='GET'){
-    console.log("daolema ")
+    //console.log("daolema ")
     return new Promise(function(resolve,reject){
         let promise
         if (method==='GET') {

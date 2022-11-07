@@ -15,12 +15,9 @@ import Pie from '../charts/pie'
 import Product from '../product/product';
 import User from '../user/user'
 
-
-
-
 const { Footer, Sider, Content } = Layout;
 
-  
+
 export default class admin extends Component {
     
   render() {
@@ -31,6 +28,7 @@ export default class admin extends Component {
     if(!user._id){
         console.log("路由到登陆页面")
         return <Navigate to='/login'/>
+        
     }
     return (
         <Layout style={{height:'100%'}}>
@@ -46,7 +44,7 @@ export default class admin extends Component {
             <Route path="/category" element={<Category/>}></Route> 
             <Route path="/product" element={<Product/>}></Route>
             <Route path="/role" element={<Role/>}></Route>
-             <Route path="/user" element={<User/>}></Route>
+            <Route path="/user" element={<User/>}></Route>
             <Route path="/charts/bar" element={<Bar/>}></Route>
             <Route path="/charts/Line" element={<Line/>}></Route>
             <Route path="/charts/Pie" element={<Pie/>}></Route>
