@@ -14,8 +14,6 @@ class App extends Component {
           <Route path="/login" element={<Login/>}></Route>
         </Routes>
       </div>
-      
-      
     );
   }
   

@@ -2,53 +2,58 @@ import React, { useState,useEffect} from 'react'
 import './index.less'
 import memoryUtils from '../../utils/memoryUtils'
 import { Button, Modal } from 'antd';
-import { useNavigate,} from 'react-router-dom'
+import { useNavigate,useLocation} from 'react-router-dom'
 import Time from '../Time/time'
 import storageUtils from '../../utils/storageUtils';
-import {reqWeather} from '../../api/index'
-
+import {reqWeather} from '../../api/index';
+import {menulist} from '../../config/menuConfig.js';
 
 export default function Header()  {
+  //动态获取user
+  const user =memoryUtils.user.username
+  const {pathname} = useLocation()
+  //console.log("pathname",pathname)
+  //判断在哪个页面
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
+  //点击退出，弹出确定按钮
   const handleExit=()=>{
     setIsModalOpen(true);
   }
+  //用户点击确认后清除user的信息
   const handleOk=()=>{
-    console.log("===handleOk===")
     memoryUtils.user={}
     storageUtils.removeUser() 
     navigate("/login") 
-    
   }
+  //用户点击取消之后，消除弹框
   const handleCancel=()=>{
     setIsModalOpen(false)
   }
-  // 相当于 componentDidMount 和 componentDidUpdate:
- /*  useEffect(async() => {
-    // 使用浏览器的 API 更新页面标题
-    const response =await reqLogin(101010100)
-    console.log("reqLogin",reqLogin("101010100"))
-  }); */
+
   useEffect(() => {
-    console.log("获取数据")
-    async function fetchData() {
-      console.log("fetchData")
-      // You can await here
-      const response = await reqWeather(101010100)
-      // ...
-    }
-    fetchData();
-   
-    
+    reqWeather(101010100,{
+    callBack: 'res1',
+    // 超时处理
+    timeout: 30000
+  })
+  // 请求成功
+  .then(res => {
+    console.log('jsonp->', res);
+  })
+  // 请求失败
+  .catch(err => {
+      console.log("network err!")
+  })  
   }, []);
    
  
 
     return (
+      
       <div className='header'>
         <div className='header-top'>
-          <span>欢迎，admin</span>
+          <span>欢迎，{user}</span>
           <span className="quit" onClick={handleExit}>退出</span>
           <Modal  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         是否确认退出？
