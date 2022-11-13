@@ -35,7 +35,7 @@ export default function Header()  {
     async function fetchData() {
       console.log("fetchData")
       // You can await here
-      const response = await reqWeather(101010100)
+     /*  const response = await reqWeather(101010100) */
       // ...
     }
     fetchData();

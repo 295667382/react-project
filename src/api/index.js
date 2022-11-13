@@ -23,6 +23,32 @@ export const reqAddCategory= (parentId,categoryName)=>ajax('/api/manage/category
 export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/category/update',{categoryId:categoryId,categoryName:categoryName},'POST')
 
 
+//获取商品列表
+/* ### 请求URL：
+    http://localhost:5000/manage/product/list
+### 请求方式：
+   GET
+### 参数类型:
+    |参数		|是否必选 |类型     |说明
+    |pageNum    |Y       |Number   |页码
+    |pageSize   |Y       |Number   |每页条目数 */
+export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
+
+/* 9. 根据分类ID获取分类
+### 请求URL：
+    http://localhost:5000/manage/category/info
+### 请求方式：
+    GET
+### 参数类型:
+    |参数		|是否必选 |类型     |说明
+    |categoryId    |Y       |string   |父级分类的ID */
+export const reqIdGetCatgory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
+
+
+
+
+
+
 //https://devapi.qweather.com/v7/weather/now?location=101010100&key=0c7e0798d4bc4525a418ac399b34637f
 export function reqWeather(city) { const url =
    // `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p4 9MVra6urFRGOT9s8UBWr2`

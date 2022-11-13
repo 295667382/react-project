@@ -6,6 +6,7 @@ import {reqCategorys,reqDeleteCategory,reqAddCategory,reqUpdateCategory} from '.
 export default class Category extends Component {
   state={
     categoryList:[], //分类列表
+    subcategoryList:[],//子分类列表
     _id:'',
     categoryTitle:'一类列表',
     defaultValue:'一类列表',
@@ -13,14 +14,37 @@ export default class Category extends Component {
     isUpdateModalOpen:false,
     listItem:{},
     parentId:'0',
-    newName:''
+    newName:'',
+    addselectCatory:'',//添加类别=》select选项选择的分类类型的parentid;
+    addCategoryName:'',//添加类别=》input框添加的类别名称
+    options:[{value:'0',label:'一类列表',parentId:'0'}]
   }
   //初始化列表方法
   getCategoryList=async(parentId)=>{
+    
     const response =await reqCategorys(parentId)
+   
     console.log("getCategoryList",response)
     if(response.status===0){
-      this.setState({categoryList:response.data})
+      if(parentId==='0'){
+        this.setState({categoryList:response.data},()=>{
+          const options=[]
+          this.state.categoryList.forEach((item,index)=>{
+            if(item.parentId==='0'){
+              options.push({
+                value:item._id,  //_id
+                label:item.name, //name
+                parentId:item.parentId  //parentId 
+              })
+            }
+            this.setState({options:[{value:'0',label:'一类列表',parentId:'0'},...options]})
+          })
+        })
+      }else{
+        this.setState({subcategoryList:response.data})
+       
+      }
+      
     }
     
   }
@@ -39,18 +63,23 @@ export default class Category extends Component {
   }
   //添加类别相关的方法
   addCategory=()=>{
-    console.log("tianjia ")
-    this.setState({isAddModalOpen:true})
-    
     //点击添加之后弹出对话框
-    
+    console.log("addCategory",this.state.categoryList)
+    this.setState({isAddModalOpen:true,addCategoryName:''})  
   }
-  //添加类别的对话框点击确定
-  handleAddOk=()=>{
-    //首页添加
-
-    //子页面添加
-
+  //添加类别的对话框点击确定  reqAddCategory= (parentId,categoryName)
+  handleAddOk=async()=>{
+    const parentId=this.state.addselectCatory
+    console.log("handleAddOk",parentId)
+    const categoryName=this.state.addCategoryName
+    const response=await reqAddCategory(parentId,categoryName)
+    console.log("==reqAddCategory===",response)
+    if(response.status===0){
+      message.success("添加成功")
+      this.setState({isAddModalOpen:false},()=>{
+        this.getCategoryList(parentId)
+      })
+    }
   }
   //添加类别的对话框点击取消
   handleAddCancel=()=>{
@@ -58,7 +87,24 @@ export default class Category extends Component {
     message.info("取消添加")
     
   }
+  //select选择类别触发的事件
+  onSelectChange=(e)=>{
+    console.log("选择类别触发的事件",e)
+    const id =e
+    if (id==='0') {
+      this.setState({addselectCatory:'0'})
+     
+    }else{
+      this.setState({addselectCatory:id})
+    }
+    
+    
+  }
 
+  //input框触发的事件
+  addCatrgoryname=(e)=>{
+    this.setState({addCategoryName:e.target.value})
+  }
 
 
   //========更新类别=========
@@ -105,9 +151,7 @@ export default class Category extends Component {
             name=item.name
           }
         })
-       // console.log("name",name)
         this.setState({categoryTitle:`一类列表->${name}`,defaultValue:name})
-
       })
       console.log("this.getCategoryList(parentId)",parentId)
       this.getCategoryList(parentId)
@@ -123,14 +167,16 @@ export default class Category extends Component {
     const addbutton=(
       <Button type="primary" onClick={this.addCategory} icon={<PlusOutlined />}>添加</Button>
     )
-    const {categoryList,_id,categoryTitle,isAddModalOpen,isUpdateModalOpen,defaultValue,parentId,listItem}= this.state
-    console.log("parentId",parentId)
-    console.log("parentId",parentId==='0'?"查看子分类":"null")
+    const {options,categoryList,subcategoryList,_id,categoryTitle,isAddModalOpen,isUpdateModalOpen,defaultValue,parentId,listItem}= this.state
+ 
+   
+    const data=parentId==='0'?categoryList:subcategoryList
+
     return (
     <div className='category'>
     <Card style={{ textAlign: 'left'}} size="small" title={categoryTitle} extra={addbutton} >
-    <div class="category-list">
-    <Table dataSource={categoryList} >
+    <div className="category-list">
+    <Table dataSource={data} >
     <Column title="类别名称" dataIndex="name" key="name" />
     <Column title="parentId" dataIndex="parentId" key="parentId" />
     <Column title="_id" dataIndex="_id" key="_id" />
@@ -152,13 +198,15 @@ export default class Category extends Component {
       <Modal title="添加类别" open={isAddModalOpen} onOk={this.handleAddOk} onCancel={this.handleAddCancel}>
       <span>分类类型:</span>
       <Select 
-      defaultValue={defaultValue}
+      /* defaultValue={defaultValue} */
+      options={options}
       style={{marginBottom:'10px',width: '320px',marginLeft:'10px'}}
       allowClear
+      onChange={this.onSelectChange}
     />
       <div>
         <span>类别名称:</span>
-        <Input placeholder="请输入类别名称" style={{marginBottom:'10px',width: '320px',marginLeft:'10px'}} />
+        <Input placeholder="请输入类别名称" onChange={this.addCatrgoryname} style={{marginBottom:'10px',width: '320px',marginLeft:'10px'}} />
       </div>
       </Modal>
       <Modal title="修改类别" open={isUpdateModalOpen} onOk={this.handleUpdateOk} onCancel={this.handleUpdateCancel}>

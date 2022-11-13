@@ -14,6 +14,9 @@ import Line from '../charts/line'
 import Pie from '../charts/pie'
 import Product from '../product/product';
 import User from '../user/user'
+import ProductDetail from '../product/detail';
+import ProductAddUpdate from '../product/add-update'
+
 
 const { Footer, Sider, Content } = Layout;
 
@@ -38,11 +41,14 @@ export default class admin extends Component {
         </Sider>
         <Layout>
           <Header>Header</Header>
-          <Content style={{backgroundColor: 'white'}}>            
+          <Content style={{backgroundColor: '#D3D3D3',padding:'20px'}}>            
           <Routes>
             <Route path="/home" element={<Home/>}></Route>
             <Route path="/category" element={<Category/>}></Route> 
+           {/*  product的主页面，更新页面及细节页面 */}
             <Route path="/product" element={<Product/>}></Route>
+            <Route path="product/detail" element={<ProductDetail/>}></Route> 
+            <Route path="product/addupdate" element={<ProductAddUpdate/>}></Route> 
             <Route path="/role" element={<Role/>}></Route>
             <Route path="/user" element={<User/>}></Route>
             <Route path="/charts/bar" element={<Bar/>}></Route>
