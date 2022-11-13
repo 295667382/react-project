@@ -27,12 +27,12 @@ export default function Product() {
   
      })
     useEffect (()=>{
-     /*  loadData("1") */
-      /* loadData() */
-    })
-    
+      loadData("1")
+     /*  loadData(tableParams.pagination.current) */
+    //传入空数组[]: 副作用仅在初始渲染之后执行一次
+    },[])
+  
     const handleChangeSelect=()=>{
-      
 
     }
     const ChangePagination=(pagination, filters, sorter, extra)=>{
@@ -41,7 +41,6 @@ export default function Product() {
         filters,
         ...sorter,
       });
-      loadData(tableParams.pagination.current)
     }
    /*  const ChangePagination=(pagination, filters, sorter, extra)=>{
       console.log("pagination",pagination,"filters:",filters,"sorter",sorter,"extra",extra)
