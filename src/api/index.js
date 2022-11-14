@@ -34,7 +34,7 @@ export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/cate
     |pageSize   |Y       |Number   |每页条目数 */
 export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
 
-/* 9. 根据分类ID获取分类
+/* 9- 根据分类ID获取分类
 ### 请求URL：
     http://localhost:5000/manage/category/info
 ### 请求方式：
@@ -42,11 +42,17 @@ export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{
 ### 参数类型:
     |参数		|是否必选 |类型     |说明
     |categoryId    |Y       |string   |父级分类的ID */
-export const reqIdGetCatgory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
+export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
 
 
+//11-根据ID/Name搜索产品分页列表
+/* |参数		|是否必选 |类型     |说明
+|pageNum       |Y       |Number   |页码
+|pageSize      |Y       |Number   |每页条目数
+|productName   |N       |String   |根据商品名称搜索
+|productDesc   |N       |String   |根据商品描述搜索 */
 
-
+export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax('/api/manage/product/search',{pageNum:pageNum,pageSize:pageSize,productName:productName,productDesc:productDesc},'GET')
 
 
 //https://devapi.qweather.com/v7/weather/now?location=101010100&key=0c7e0798d4bc4525a418ac399b34637f

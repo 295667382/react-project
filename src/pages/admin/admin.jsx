@@ -41,7 +41,7 @@ export default class admin extends Component {
         </Sider>
         <Layout>
           <Header>Header</Header>
-          <Content style={{backgroundColor: '#D3D3D3',padding:'20px'}}>            
+          <Content style={{backgroundColor: '#fafafa',padding:'20px'}}>            
           <Routes>
             <Route path="/home" element={<Home/>}></Route>
             <Route path="/category" element={<Category/>}></Route> 
