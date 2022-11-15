@@ -1,38 +1,51 @@
 import React,{useEffect,useState} from 'react'
-import { SearchOutlined,PlusOutlined } from '@ant-design/icons';
+import { SearchOutlined,PlusOutlined,ReloadOutlined } from '@ant-design/icons';
+import { useNavigate} from 'react-router-dom'
 import { Card,Select,Input,Button,Space,Table, Tag, message   } from 'antd';
 import {reqGetProduct,reqSearchCategory} from '../../api/index'
+import {PAGE_SIZE} from '../../utils/constantd'
 
 
 export default function Product() {
-    //
+    const navigate = useNavigate()
     const [data, setData]=useState([])
     const [total, setTotal]=useState([0])
     const [tableParams, setTableParams] = useState({
       pagination: {
         current: 1,
-        pageSize: 4, 
+        pageSize: PAGE_SIZE, 
       },
     });
     const [SelectFlag,setSelectFlag] =useState([0])  //按商品名称搜索falg值为0，按商品描述搜索
     const [keyword,setKeyword]=useState([])
-   /*  |pageNum    |Y       |Number   |页码
-    |pageSize   |Y       |Number   |每页条目数  */
-    const loadData=(async(tableParams)=>{
-      const pageNum=tableParams.pagination.current
-      const response=await reqGetProduct(pageNum,"4")
-      console.log("response",response)
-      setData(response.data.list)
-      setTotal(response.data.total)
-     })
+
     useEffect (()=>{
       loadData(tableParams)
       
     },[tableParams])
+
+   /*  |pageNum    |Y       |Number   |页码
+    |pageSize   |Y       |Number   |每页条目数  */
+    //首页加载数据
+    const loadData=(async(tableParams)=>{
+      const pageNum=tableParams.pagination.current
+      const response=await reqGetProduct(pageNum,PAGE_SIZE)
+      console.log("response",response)
+      if(response.status===0){
+        setData(response.data.list)
+        setTotal(response.data.total)
+        message.success("更新列表成功")
+      }else{
+        message.error("更新列表失败")
+      }
+      
+     })
   
+    //改变select选项框
     const handleChangeSelect=(value)=>{
       setSelectFlag(value)
     }
+    //
     const onhandlekeyword=(e)=>{
       setKeyword(e.target.value)
       
@@ -46,24 +59,37 @@ export default function Product() {
       //以商品名称搜索
       if(SelectFlag==='0'){
         const productName=keyword
-        const response=await reqSearchCategory("1","4",productName)
+        const response=await reqSearchCategory("1",PAGE_SIZE,productName)
         console.log("以商品名称搜索",response)
-        setData(response.data.list)
-        message.success("搜索成功")
+        if(response.status===0){
+          setTotal(response.data.total)
+          setData(response.data.list)
+          message.success(`查询到${response.data.total}条记录`)
+        }else{
+          message.error("查询失败")
+        }
       }else{
-        //以商品ID搜索
+        //以商品描述搜索
         const productDesc=keyword
-        const response=await reqSearchCategory("1","4",productDesc)
+        console.log("productDesc",keyword)
+        const response=await reqSearchCategory("1",PAGE_SIZE,"",productDesc)
         console.log("以商品id搜索",response)
-        setData(response.data.list)
-        message.success("搜索成功")
+        if(response.status===0){
+          setTotal(response.data.total)
+          setData(response.data.list)
+          message.success(`查询到${response.data.total}条记录`)
+
+        }else{
+          message.error("查询失败")
+        }
+       
       }
-     
-      
-     // const response=await reqSearchCategory("1","4","",productDesc)
-     //console.log("点击搜索按钮进行搜索product",response)
-      
     }
+    //刷新按钮
+    const RefreshProduct=()=>{
+      loadData(tableParams)
+    }
+    //更改页码
     const ChangePagination=(pagination, filters, sorter, extra)=>{
       console.log("pagination",pagination,"filters:",filters,"sorter",sorter,"extra",extra)
       setTableParams({
@@ -74,6 +100,23 @@ export default function Product() {
       console.log("tableParams",tableParams)
       loadData(tableParams)
     }
+//========查看product的详情及修改页面=========
+  const CheckDetail=(record)=>{
+    return (
+     ()=>{
+      navigate("/product/detail/",{ state: { record:record}})
+      
+     }
+    )
+  }
+//=======添加商品==========
+  const addProduct=(product)=>{
+    return (()=>{
+      //console.log("product",product)
+      navigate("/product/addupdate",{state:{product}})
+    })
+  }
+
     const title=(
       <div>
       <Select
@@ -94,10 +137,11 @@ export default function Product() {
     />
     <Input placeholder="关键字"  onChange={onhandlekeyword} style={{ width: 220 }} />
     <Button type="primary" onClick={SerachProduct} style={{ marginLeft: '20px' }} icon={<SearchOutlined/>}>搜索</Button>
+    <Button type="primary" onClick={RefreshProduct} icon={<ReloadOutlined />} style={{ marginLeft: '20px' }}>刷新</Button>
 </div>)
 
     const extra=(
-      <Button type="primary" icon={<PlusOutlined/>}>添加商品</Button>
+      <Button type="primary" onClick={addProduct()} icon={<PlusOutlined/>}>添加商品</Button>
     )
 
     //columns
@@ -133,7 +177,7 @@ export default function Product() {
         key: 'action',
         render: (_, record) => (
           <Space size="middle">
-            <a>详情</a>
+            <a onClick={CheckDetail(record)}>详情</a>
             <a>修改</a>
           </Space>
         ),
@@ -152,8 +196,6 @@ export default function Product() {
       total:total,
       pageNum:tableParams.pagination.pageNum,
       pageSize:tableParams.pagination.pageSize
-     
-
     }} 
     />
     

@@ -36,8 +36,7 @@ export default class admin extends Component {
     return (
         <Layout style={{height:'100%'}}>
         <Sider>
-        <LeftNav />
-            
+        <LeftNav />   
         </Sider>
         <Layout>
           <Header>Header</Header>
