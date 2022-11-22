@@ -16,8 +16,6 @@ function Login(){
         if(response.status===0){
             //console.log("登录成功 this.props.history",this.props)
             storageUtils.saveUser(response.data)
-            console.log("返回的response",response)
-            console.log("storageUtils.getUser",storageUtils.getUser())
             message.info("登录成功")  
             navigate('/')
           
@@ -29,7 +27,7 @@ function Login(){
       };
      
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+       
       };
       /* handleClick=(e)=>{
         console.log("登录按钮",this.props)

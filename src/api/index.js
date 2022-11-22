@@ -23,16 +23,6 @@ export const reqAddCategory= (parentId,categoryName)=>ajax('/api/manage/category
 export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/category/update',{categoryId:categoryId,categoryName:categoryName},'POST')
 
 
-//获取商品列表
-/* ### 请求URL：
-    http://localhost:5000/manage/product/list
-### 请求方式：
-   GET
-### 参数类型:
-    |参数		|是否必选 |类型     |说明
-    |pageNum    |Y       |Number   |页码
-    |pageSize   |Y       |Number   |每页条目数 */
-export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
 
 /* 9- 根据分类ID获取分类
 ### 请求URL：
@@ -45,6 +35,21 @@ export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{
 export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
 
 
+
+//10-获取商品列表
+/* ### 请求URL：
+    http://localhost:5000/manage/product/list
+### 请求方式：
+   GET
+### 参数类型:
+    |参数		|是否必选 |类型     |说明
+    |pageNum    |Y       |Number   |页码
+    |pageSize   |Y       |Number   |每页条目数 */
+export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
+
+
+
+
 //11-根据ID/Name搜索产品分页列表
 /* |参数		|是否必选 |类型     |说明
 |pageNum       |Y       |Number   |页码
@@ -53,6 +58,57 @@ export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{ca
 |productDesc   |N       |String   |根据商品描述搜索 */
 
 export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax('/api/manage/product/search',{pageNum:pageNum,pageSize:pageSize,productName:productName,productDesc:productDesc},'GET')
+/* ## 12. 添加商品
+### 请求URL：
+    http://localhost:5000/manage/product/add
+
+### 请求方式：
+    POST
+
+### 参数类型:
+    |参数		       |是否必选 |类型     |说明
+    |categoryId    |Y       |string   |分类ID
+    |pCategoryId   |Y       |string   |父分类ID
+    |name          |Y       |string   |商品名称
+    |desc          |N       |string   |商品描述
+    |price         |N       |string   |商品价格
+    |detail        |N       |string   |商品详情
+    |imgs          |N       |array   |商品图片名数组 */
+
+export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs)=>ajax('/api/manage/product/add',{
+    categoryId:categoryId,
+    pCategoryId:pCategoryId,
+    name:name,
+    desc:desc,
+    detail:detail,
+    price:price,
+    imgs:imgs
+},'POST')
+
+
+
+/* 
+## 15. 上传图片
+### 请求URL：
+    http://localhost:5000/manage/img/upload
+
+### 请求方式：
+    POST
+
+### 参数类型:
+
+    |参数		|是否必选 |类型     |说明
+    |image  |Y       |文件   |图片文件 */
+
+//export const reqUploadPic=(image)=>ajax('/api/manage/img/upload',{image:image},'POST')
+
+
+
+
+
+//22-删除商品 /manage/product/delete
+export const reqDeleteProduct=(_id)=>ajax('/api/manage/product/delete',{_id:_id},'POST')
+
 
 
 //https://devapi.qweather.com/v7/weather/now?location=101010100&key=0c7e0798d4bc4525a418ac399b34637f
@@ -63,7 +119,7 @@ export function reqWeather(city) { const url =
     param: 'callback'
     }, (error, response) => {
     if (!error && response.status == 'success') {
-        console.log("返回来的天气数据",response)
+       // console.log("返回来的天气数据",response)
     //const {dayPictureUrl, weather} = response.results[0].weather_data[0] resolve({dayPictureUrl, weather})
     } else { alert('获取天气信息失败')
     } })

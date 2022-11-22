@@ -6,14 +6,16 @@ import Login from './pages/login/login'
 
 
 
+
 class App extends Component {
   render() {
     return (
       <div className="app">
         <Routes>
           <Route path="/*" element={<Admin/>}></Route>
-          <Route path="/login" element={<Login/>}></Route>
          
+          <Route path="/login" element={<Login/>}></Route>
+          
         </Routes>
       </div>
       

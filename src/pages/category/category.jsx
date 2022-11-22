@@ -64,16 +64,13 @@ export default class Category extends Component {
   //添加类别相关的方法
   addCategory=()=>{
     //点击添加之后弹出对话框
-    console.log("addCategory",this.state.categoryList)
     this.setState({isAddModalOpen:true,addCategoryName:''})  
   }
   //添加类别的对话框点击确定  reqAddCategory= (parentId,categoryName)
   handleAddOk=async()=>{
     const parentId=this.state.addselectCatory
-    console.log("handleAddOk",parentId)
     const categoryName=this.state.addCategoryName
     const response=await reqAddCategory(parentId,categoryName)
-    console.log("==reqAddCategory===",response)
     if(response.status===0){
       message.success("添加成功")
       this.setState({isAddModalOpen:false},()=>{
@@ -142,7 +139,6 @@ export default class Category extends Component {
   //查看子列表  获取一级或某个二级分类列表  reqCategorys  parentId为父级的id 子列表的parentId为父列表的_id
   SearchSonCategory=(record)=>{
     return (()=>{
-      console.log("record",record)
       const parentId=record._id
       let name
       this.setState({_id:record._id,listItem:record,parentId:record._id},()=>{
@@ -153,7 +149,7 @@ export default class Category extends Component {
         })
         this.setState({categoryTitle:`一类列表->${name}`,defaultValue:name})
       })
-      console.log("this.getCategoryList(parentId)",parentId)
+      //console.log("this.getCategoryList(parentId)",parentId)
       this.getCategoryList(parentId)
     })
   }

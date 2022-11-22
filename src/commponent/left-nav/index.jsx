@@ -9,7 +9,6 @@ import {items} from '../../config/menuConfig.js'
 function LeftNav(){
   const location = useLocation()
   const navigate = useNavigate()
-  console.log("",location)
   const path=location.pathname
   const handleClick=(e)=>{
     const key=e.key

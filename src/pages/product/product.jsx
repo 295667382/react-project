@@ -1,8 +1,8 @@
 import React,{useEffect,useState} from 'react'
 import { SearchOutlined,PlusOutlined,ReloadOutlined } from '@ant-design/icons';
 import { useNavigate} from 'react-router-dom'
-import { Card,Select,Input,Button,Space,Table, Tag, message   } from 'antd';
-import {reqGetProduct,reqSearchCategory} from '../../api/index'
+import { Card,Select,Input,Button,Space,Table, Tag, message,Modal} from 'antd';
+import {reqGetProduct,reqSearchCategory,reqDeleteProduct} from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constantd'
 
 
@@ -10,12 +10,15 @@ export default function Product() {
     const navigate = useNavigate()
     const [data, setData]=useState([])
     const [total, setTotal]=useState([0])
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteId,setDeleteId]=useState("")
     const [tableParams, setTableParams] = useState({
       pagination: {
         current: 1,
         pageSize: PAGE_SIZE, 
       },
     });
+    
     const [SelectFlag,setSelectFlag] =useState([0])  //按商品名称搜索falg值为0，按商品描述搜索
     const [keyword,setKeyword]=useState([])
 
@@ -30,7 +33,6 @@ export default function Product() {
     const loadData=(async(tableParams)=>{
       const pageNum=tableParams.pagination.current
       const response=await reqGetProduct(pageNum,PAGE_SIZE)
-      console.log("response",response)
       if(response.status===0){
         setData(response.data.list)
         setTotal(response.data.total)
@@ -71,9 +73,7 @@ export default function Product() {
       }else{
         //以商品描述搜索
         const productDesc=keyword
-        console.log("productDesc",keyword)
         const response=await reqSearchCategory("1",PAGE_SIZE,"",productDesc)
-        console.log("以商品id搜索",response)
         if(response.status===0){
           setTotal(response.data.total)
           setData(response.data.list)
@@ -91,13 +91,12 @@ export default function Product() {
     }
     //更改页码
     const ChangePagination=(pagination, filters, sorter, extra)=>{
-      console.log("pagination",pagination,"filters:",filters,"sorter",sorter,"extra",extra)
+    
       setTableParams({
         pagination,
         filters,
         ...sorter,
       });
-      console.log("tableParams",tableParams)
       loadData(tableParams)
     }
 //========查看product的详情及修改页面=========
@@ -109,13 +108,54 @@ export default function Product() {
      }
     )
   }
+  //============删除商品==============
+  const DeleteProduct=(record)=>{
+    return (()=>{
+      setDeleteId(record._id)
+      setIsModalOpen(true)
+    })
+    
+
+ /*    return (async()=>{
+      console.log("record",record)
+      const response=await reqDeleteProduct(record._id)
+      if(response.status===0){
+        message.success("删除成功")
+        loadData(tableParams)
+      }
+     })  */
+
+
+  }
+  const handleOk = async() => {
+    const response=await reqDeleteProduct(deleteId)
+    if(response.status===0){
+      message.success("删除成功")
+      setIsModalOpen(false)
+      loadData(tableParams)
+    }
+    
+    
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 //=======添加商品==========
   const addProduct=(product)=>{
     return (()=>{
-      //console.log("product",product)
+      console.log("product",product)
       navigate("/product/addupdate",{state:{product}})
     })
   }
+
+  //=====编辑商品=======
+  const UpdateProduct=(product)=>{
+    return (()=>{
+      console.log("product",product)
+      navigate("/product/addupdate",{state:{product}})
+    })
+  }
+ 
 
     const title=(
       <div>
@@ -178,7 +218,8 @@ export default function Product() {
         render: (_, record) => (
           <Space size="middle">
             <a onClick={CheckDetail(record)}>详情</a>
-            <a>修改</a>
+            <a onClick={UpdateProduct(record)}>修改</a>
+            <a onClick={DeleteProduct(record)}>删除</a>
           </Space>
         ),
       },
@@ -198,8 +239,13 @@ export default function Product() {
       pageSize:tableParams.pagination.pageSize
     }} 
     />
-    
     </Card>
+    <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        确认删除该商品吗？
+      </Modal>
+    
+    
+     
 
    </div>
        

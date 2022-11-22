@@ -15,7 +15,7 @@ export default function Header()  {
     setIsModalOpen(true);
   }
   const handleOk=()=>{
-    console.log("===handleOk===")
+    //.log("===handleOk===")
     memoryUtils.user={}
     storageUtils.removeUser() 
     navigate("/login") 
@@ -28,10 +28,9 @@ export default function Header()  {
  /*  useEffect(async() => {
     // 使用浏览器的 API 更新页面标题
     const response =await reqLogin(101010100)
-    console.log("reqLogin",reqLogin("101010100"))
+    .log("reqLogin",reqLogin("101010100"))console
   }); */
   useEffect(() => {
-    console.log("获取数据")
     async function fetchData() {
       console.log("fetchData")
       // You can await here
