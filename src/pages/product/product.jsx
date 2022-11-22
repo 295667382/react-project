@@ -114,18 +114,6 @@ export default function Product() {
       setDeleteId(record._id)
       setIsModalOpen(true)
     })
-    
-
- /*    return (async()=>{
-      console.log("record",record)
-      const response=await reqDeleteProduct(record._id)
-      if(response.status===0){
-        message.success("删除成功")
-        loadData(tableParams)
-      }
-     })  */
-
-
   }
   const handleOk = async() => {
     const response=await reqDeleteProduct(deleteId)
@@ -143,15 +131,16 @@ export default function Product() {
 //=======添加商品==========
   const addProduct=(product)=>{
     return (()=>{
-      console.log("product",product)
+      //console.log("product",product)
       navigate("/product/addupdate",{state:{product}})
     })
   }
 
   //=====编辑商品=======
   const UpdateProduct=(product)=>{
+    //console.log("编辑商品",product)
     return (()=>{
-      console.log("product",product)
+      //console.log("product",product)
       navigate("/product/addupdate",{state:{product}})
     })
   }

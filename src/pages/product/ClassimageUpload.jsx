@@ -15,7 +15,7 @@ export default class ClassimageUpload extends Component {
       super(props)
       let fileList = []
       // 如果传入了 imgs, 生成一个对应的 fileList 
-      console.log("=========this.props.imgs==========",this.props)
+      //console.log("=======图片组件==this.props.imgs==========",this.props)
       const imgs = this.props.imgs
       if (imgs && imgs.length > 0) {
           fileList = imgs.map((img, index) => ({
@@ -48,23 +48,21 @@ export default class ClassimageUpload extends Component {
 
     }
     handleChange=({ file, fileList })=>{
-        
+        console.log("ffile.status",file.status)
         this.setState({fileList:fileList});
         if (file.status === 'done') {
             message.success(`上传图片成功:${fileList.status}`)
-            console.log("成功后的",fileList)
-          }else if(file.status === 'removed'){
-           
-           if(file.response.status===0){
-            message.success("删除图片成功")
-           }
-          }
+        }else if(file.status ==='removed'){
+          message.success("删除图片")
+        
+        }else{
+            console("我进来了这里")
+        }
 
     }
     getImgs = () => this.state.fileList.map(file => file.response.data.name)
     render() {
     const {fileList}=this.state
-    console.log("fileList",fileList)
     const uploadButton = (
         <div>
           <PlusOutlined />

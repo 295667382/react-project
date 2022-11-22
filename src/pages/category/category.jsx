@@ -24,7 +24,7 @@ export default class Category extends Component {
     
     const response =await reqCategorys(parentId)
    
-    console.log("getCategoryList",response)
+    //console.log("getCategoryList",response)
     if(response.status===0){
       if(parentId==='0'){
         this.setState({categoryList:response.data},()=>{

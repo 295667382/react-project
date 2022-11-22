@@ -32,39 +32,44 @@ class ProductAddUpdate extends Component {
         price:'',
         imgs:[],
         detail:'',
-        categoryId:'',
-        pCategoryId:'',
+        categoryId:'1',
+        pCategoryId:'1',
         options:[
             
         ]
         
     }
+   
     constructor(props) {
         super(props);
         this.editor = React.createRef();
         this.pw = React.createRef();
         
+            
+        
       }
     componentDidMount(){
-       
+        console.log("componentDidMount")
         this.getCatory()
         const {location}=this.props
         const product=location.state.product
         if(product){
-            this.setState({titleFlag:"修改商品"})
-            const name=product.name
-            const desc=product.desc
-            const price=product.price
-            const imgs=product.imgs
-            const detail=product.detail
-            this.setState({name:name,desc:desc,price:price,imgs:imgs,detail:detail},()=>{
-                
-            })
-            
+            this.setState({titleFlag:"修改商品"})     
         }else{
             this.setState({titleFlag:"添加商品"})
         } 
 
+    }
+    componentWillMount () {
+        const {location}=this.props
+        
+        const product=location.state.product
+        //健壮性保证
+        const {imgs,name,desc,price,detail}=product? product:[]
+        
+        this.setState({imgs:imgs,name:name,desc:desc,price:price,detail:detail},()=>{
+            //console.log("更新商品",this.state.imgs)
+        })
     }
     getCatory=async()=>{
         const response=await reqIdGetCategory("0")
@@ -90,10 +95,6 @@ class ProductAddUpdate extends Component {
                         parentId:item.parentId   
                     })
                 }) 
-               
-              /*   const targetOption = options.find(option => option._id===pid) */
-                //console.log(":targetOption:",targetOption,"children",children)
-               /*   targetOption.children = children  */
             }
 
         })
@@ -109,9 +110,11 @@ class ProductAddUpdate extends Component {
        this.props.navigate(-1)
     }
     //addProdcut添加商品
-    addProdcut=async()=>{
+    addProduct=async()=>{
+        console.log("addProduct")
         const {categoryId,pCategoryId,name,desc,price}=this.state
         const detail=this.editor.current.getDetail()
+       
         //console.log("detail",detail)
         const imgs=this.pw.current.getImgs()
         const response=await reqAddProduct(categoryId,pCategoryId,name,desc,price,detail,imgs)
@@ -141,14 +144,9 @@ class ProductAddUpdate extends Component {
         console.log("onFinis",value) */
     }
     const onFinishFailed=(errorInfo)=>{
-        /* console.log("=this.editor=",this.edito */
-        /* console.log("=this.pw=",this.pw) */
-        /* console.log('Failed:', errorInfo); */
+      
     }
     const {name,desc,price,detail,imgs}=this.state
-   // console.log("name",name)
-    const name1='222'
-   // console.log("在执行")
     return (
     <div>
     <Card title={title}  style={{ textAlign:"left" }}>
@@ -161,7 +159,8 @@ class ProductAddUpdate extends Component {
                 labelWrap
                 wrapperCol={{ flex: 1 }}
                 colon={false}
-                initialValues={{ name:name1}}
+                initialValues={{name:name,price:price,desc:desc}}
+                
             >
             <Form.Item  label="商品名称" name="name" rules={[{ required: true,message: '商品名称不能为空'}]}>
                 <Input placeholder='请输入商品名称'  onChange={(e)=>this.setState({name:e.target.value})} style={{width:'650px'}} /></Form.Item>
@@ -184,7 +183,7 @@ class ProductAddUpdate extends Component {
             </Form.Item>
                 
             <Form.Item style={{textAlign:"center"}}>
-                <Button type="primary" style={{marginRight:'40px'}}  onClick={this.addProdcut}>提交</Button>
+                <Button type="primary" style={{marginRight:'40px'}}  onClick={this.addProduct}>提交</Button>
                 <Button type="primary" style={{marginLeft:'40px'}}>取消</Button>
             </Form.Item>
           
