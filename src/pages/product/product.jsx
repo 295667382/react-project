@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { SearchOutlined,PlusOutlined,ReloadOutlined } from '@ant-design/icons';
 import { useNavigate} from 'react-router-dom'
 import { Card,Select,Input,Button,Space,Table, Tag, message,Modal} from 'antd';
-import {reqGetProduct,reqSearchCategory,reqDeleteProduct} from '../../api/index'
+import {reqGetProduct,reqSearchCategory,reqDeleteProduct,reqCategorys} from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constantd'
 
 
@@ -22,10 +22,23 @@ export default function Product() {
     const [SelectFlag,setSelectFlag] =useState([0])  //按商品名称搜索falg值为0，按商品描述搜索
     const [keyword,setKeyword]=useState([])
 
+    
     useEffect (()=>{
       loadData(tableParams)
-      
     },[tableParams])
+
+    
+    
+  /*   把数组hotelList1合并hotelLis
+    const newArr = hotelList.map(hotelItem => {
+      const data = hotelList1.find(i => hotelItem.hotelId === i.hotelId)
+      return {
+        ...hotelItem,
+        ...data,
+      }
+    }) */
+
+
 
    /*  |pageNum    |Y       |Number   |页码
     |pageSize   |Y       |Number   |每页条目数  */
@@ -104,7 +117,6 @@ export default function Product() {
     return (
      ()=>{
       navigate("/product/detail/",{ state: { record:record}})
-      
      }
     )
   }
@@ -131,7 +143,6 @@ export default function Product() {
 //=======添加商品==========
   const addProduct=(product)=>{
     return (()=>{
-      //console.log("product",product)
       navigate("/product/addupdate",{state:{product}})
     })
   }
@@ -141,9 +152,41 @@ export default function Product() {
     //console.log("编辑商品",product)
     return (()=>{
       //console.log("product",product)
-      navigate("/product/addupdate",{state:{product}})
+      
+      navigate("/product/addupdate",{state:{product:product,pid:'日用品'}})
     })
   }
+
+  //获取默认分类
+  const getcategoryId=async(product)=>{
+    //获取父分类
+    const response=await reqCategorys("0")
+    const {categoryId,pCategoryId}=product
+   // console.log("获取父分类response",response,"pCategoryId",pCategoryId)
+    if(response.status===0){
+        response.data.forEach((item)=>{
+            if(item._id===pCategoryId){
+                console.log("成功获取")
+                this.setState({pCategoryId:'zhangj'},()=>{
+                   
+                })
+            }
+        })
+    }else{
+        console.log("获取父分类失败")
+    }
+    //获取子分类
+    const res=await reqCategorys(pCategoryId)
+    if(res.status===0){
+        res.data.forEach((item)=>{
+            if(item._id===categoryId){
+                this.setState({categoryname:item.name})
+               // console.log("获取到子分类，this.state.pCategoryname",this.state.categoryname)
+            }
+        })
+    }
+
+}
  
 
     const title=(
@@ -175,6 +218,11 @@ export default function Product() {
 
     //columns
     const columns = [
+      {
+        title: 'id',
+        dataIndex: '_id',
+        key: '_id',
+      },
       
       {
         title: '商品名称',

@@ -11,24 +11,32 @@ export default class ClassimageUpload extends Component {
         previewTitle:'',
         previewOpen:false
     }
-    constructor (props) {
-      super(props)
+    componentWillMount(){
+     
       let fileList = []
-      // 如果传入了 imgs, 生成一个对应的 fileList 
-      //console.log("=======图片组件==this.props.imgs==========",this.props)
       const imgs = this.props.imgs
       if (imgs && imgs.length > 0) {
-          fileList = imgs.map((img, index) => ({
+        fileList = imgs.map((img, index) => ({
+          
           uid: -index,
           name: img,
           status: 'done', // loading: 上传中, done: 上传完成, remove: 删除 
           url: BASE_IMG_PATH + img,
-        })) }
-      //初始化状态 
-      this.state = {
-        fileList: fileList // 所有需要显示的图片信息对象的数组
+          response:{
+            data:{
+              name:img,
+              url:BASE_IMG_PATH + img,
+            }
+          },
+        })) 
       }
-     }
+    
+      this.setState({fileList:fileList},()=>{
+         // console.log("初始化图片组件",this.state.fileList)
+          
+         })
+      }
+
     getBase64 = (file) =>
     new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -37,10 +45,12 @@ export default class ClassimageUpload extends Component {
     reader.onerror = (error) => reject(error);
   });
     handlePreview=async(file)=>{
+        console.log("file",file)
         if (!file.url && !file.preview) {
             file.preview = await this.getBase64(file.originFileObj);
           }
           const PreviewImageSrc=file.url || file.preview
+          console.log("PreviewImageSrc",PreviewImageSrc)
           const PreviewTitle=file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
           this.setState({previewImage:PreviewImageSrc})
           this.setState({previewOpen:true})
@@ -48,21 +58,20 @@ export default class ClassimageUpload extends Component {
 
     }
     handleChange=({ file, fileList })=>{
-        console.log("ffile.status",file.status)
-        this.setState({fileList:fileList});
-        if (file.status === 'done') {
-            message.success(`上传图片成功:${fileList.status}`)
-        }else if(file.status ==='removed'){
-          message.success("删除图片")
-        
-        }else{
-            console("我进来了这里")
-        }
-
+        this.setState({fileList:fileList},()=>{
+         
+        })
     }
-    getImgs = () => this.state.fileList.map(file => file.response.data.name)
+    getImgs = () => this.state.fileList.map((file) => {
+      return file.response.data.name 
+    })
+    handleCancelPic=()=>{
+     
+      this.setState({previewOpen:false})
+    }
     render() {
-    const {fileList}=this.state
+    const {fileList,PreviewTitle,previewImage,previewOpen}=this.state
+   
     const uploadButton = (
         <div>
           <PlusOutlined />
@@ -88,7 +97,7 @@ export default class ClassimageUpload extends Component {
         >
           {fileList.length >= 2 ? null : uploadButton}
         </Upload>
-       {/*  <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <Modal open={previewOpen} title={PreviewTitle} footer={null} onCancel={this.handleCancelPic}>
           <img
             alt="example"
             style={{
@@ -96,7 +105,7 @@ export default class ClassimageUpload extends Component {
             }}
             src={previewImage}
           />
-        </Modal> */}
+        </Modal>
       </>
     )
   }

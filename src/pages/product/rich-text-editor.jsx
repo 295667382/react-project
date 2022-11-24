@@ -17,7 +17,7 @@ export default class Richtexteditor extends Component {
   constructor(props){
     super(props)
     const detail=this.props.detail
-    console.log("detail",this.props)
+    //console.log("detail",this.props)
     let editorState
     if(detail) { // 如果传入才需要做处理
       const blocksFromHtml = htmlToDraft(detail)

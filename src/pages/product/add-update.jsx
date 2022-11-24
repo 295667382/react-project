@@ -6,7 +6,7 @@ import ImageUpload from './imageupload';
 import ClassimageUpload from './ClassimageUpload';
 import Richtexteditor from './rich-text-editor';
 import { Editor } from 'react-draft-wysiwyg';
-import {reqIdGetCategory,reqAddProduct} from '../../api/index'
+import {reqIdGetCategory,reqAddProduct,reqUpdateProduct,reqCategorys} from '../../api/index'
 import { options } from 'less';
 /* 
 |categoryId    |Y       |string   |分类ID
@@ -32,11 +32,14 @@ class ProductAddUpdate extends Component {
         price:'',
         imgs:[],
         detail:'',
-        categoryId:'1',
-        pCategoryId:'1',
-        options:[
-            
-        ]
+        categoryId:'',
+        pCategoryId:'',
+        categoryname:'',
+        pCategoryname:'',
+        options:[],
+        poptions:[],
+        _id:'',
+        isAdd:true  //判断是添加还是更新；
         
     }
    
@@ -49,12 +52,13 @@ class ProductAddUpdate extends Component {
         
       }
     componentDidMount(){
-        console.log("componentDidMount")
         this.getCatory()
         const {location}=this.props
+        console.log("获取到的路由数据",location)
         const product=location.state.product
+        this.getcategoryId(product)
         if(product){
-            this.setState({titleFlag:"修改商品"})     
+            this.setState({titleFlag:"修改商品",isAdd:false})     
         }else{
             this.setState({titleFlag:"添加商品"})
         } 
@@ -62,71 +66,133 @@ class ProductAddUpdate extends Component {
     }
     componentWillMount () {
         const {location}=this.props
-        
         const product=location.state.product
+        console.log("product",product)
         //健壮性保证
-        const {imgs,name,desc,price,detail}=product? product:[]
-        
-        this.setState({imgs:imgs,name:name,desc:desc,price:price,detail:detail},()=>{
-            //console.log("更新商品",this.state.imgs)
+        const {_id,imgs,name,desc,price,detail,categoryId,pCategoryId}=product? product:[]
+        const pid=this.props.location.state.pid
+       /*  this.getcategoryId(product) */
+        this.setState({imgs:imgs,name:name,desc:desc,price:price,detail:detail,_id:_id,categoryId:categoryId,pCategoryId:pid},()=>{ 
+            
         })
     }
+    //获取默认分类
+    getcategoryId=async(product)=>{
+        //获取父分类
+        const response=await reqCategorys("0")
+        const {categoryId,pCategoryId}=product
+       // console.log("获取父分类response",response,"pCategoryId",pCategoryId)
+        if(response.status===0){
+            response.data.forEach((item)=>{
+                if(item._id===pCategoryId){
+                    console.log("成功获取")
+                    this.setState({pCategoryId:'zhangj'},()=>{
+                       
+                    })
+                }
+            })
+        }else{
+            console.log("获取父分类失败")
+        }
+        //获取子分类
+        const res=await reqCategorys(pCategoryId)
+        if(res.status===0){
+            res.data.forEach((item)=>{
+                if(item._id===categoryId){
+                    this.setState({categoryname:item.name})
+                   // console.log("获取到子分类，this.state.pCategoryname",this.state.categoryname)
+                }
+            })
+        }
+
+    }
+
+
     getCatory=async()=>{
         const response=await reqIdGetCategory("0")
-        const options=[]
+        const poptions=[]
         response.data.forEach(async(item)=>{
             const pid=item._id
             //获取一级类表
-            options.push({
+            poptions.push({
                 value:item.name,
                 label:item.name,
                 _id:item._id,
                 parentId:item.parentId
             })
-            //获取之后根据item._id获取二级列表
-            const subCategorys = await reqIdGetCategory(item._id)
-            const children=[]
-            if(subCategorys.status===0){
-                subCategorys.data.forEach((item)=>{
-                    options.push({
-                        value:item.name,
-                        label:item.name,
-                        _id:item._id,
-                        parentId:item.parentId   
-                    })
-                }) 
-            }
-
         })
-     
-         this.setState({options:options},()=>{
-           // console.log("=======option=======",options.length,options)
+         this.setState({poptions:poptions},()=>{
         }) 
 
     }
+    //=====父分类选择=====
+    onChangeParent=async(value, selectedOptions)=>{
+        console.log("父分类value:",value,"selectedOptions:",selectedOptions[0])
+        //获取子列表
+        const {_id,parentId}=selectedOptions[0]
+        this.setState({pCategoryId:_id})
+        console.log("_id",_id)
+        const response=await reqIdGetCategory(_id)
+        const options=[]
+        console.log("response",response)
+        if(response.status===0){
+            response.data.forEach(async(item)=>{
+                const pid=item._id
+                //获取一级类表
+                options.push({
+                    value:item.name,
+                    label:item.name,
+                    _id:item._id,
+                    parentId:item.parentId
+                })
+            })
+             this.setState({options:options},()=>{
+       
+        }) 
+        }
+
+    }
+    //子分类获取
+    onChangeOption=(value, selectedOptions)=>{
+        console.log("子分类value:",value,"selectedOptions:",selectedOptions[0])
+        const {_id,parentId}=selectedOptions[0]
+        this.setState({ categoryId:_id})
+    }
+    
      
     goback=()=>{
-       
        this.props.navigate(-1)
     }
     //addProdcut添加商品
     addProduct=async()=>{
-        console.log("addProduct")
-        const {categoryId,pCategoryId,name,desc,price}=this.state
+        const {isAdd}=this.state
+        const {categoryId,pCategoryId,name,desc,price,_id}=this.state
         const detail=this.editor.current.getDetail()
-       
-        //console.log("detail",detail)
         const imgs=this.pw.current.getImgs()
-        const response=await reqAddProduct(categoryId,pCategoryId,name,desc,price,detail,imgs)
-        //console.log("addProdcut添加商品",response)
-        if(response.status===0){
-            message.success("添加商品成功")
-            this.props.navigate(-1)
+        if(isAdd){
+            //添加商品
+            // console.log("添加商品")
+            const response=await reqAddProduct(categoryId,pCategoryId,name,desc,price,detail,imgs)
+            if(response.status===0){
+                message.success("添加商品成功")
+                this.props.navigate(-1)
+            }
+
+        }else{
+           
+            //更新商品
+            const response=await reqUpdateProduct(_id,categoryId,pCategoryId,name,desc,price,detail,imgs)
+            if(response.status===0){
+                message.success("修改商品成功")
+                this.props.navigate(-1)
+            }
+            
         }
+      
     }
-   
+     
     render() {
-   const {options}=this.state
+   
     //card title取值
     const title=(
         <div>
@@ -137,7 +203,7 @@ class ProductAddUpdate extends Component {
     const onChange = (value) => {
            
             
-          };
+    };
 
     const onFinish=(value)=>{
        /*  console.log("===")
@@ -146,7 +212,8 @@ class ProductAddUpdate extends Component {
     const onFinishFailed=(errorInfo)=>{
       
     }
-    const {name,desc,price,detail,imgs}=this.state
+    const {name,categoryname,pCategoryname,desc,price,detail,imgs,poptions,options,pCategoryId,categoryId}=this.state
+   
     return (
     <div>
     <Card title={title}  style={{ textAlign:"left" }}>
@@ -159,7 +226,7 @@ class ProductAddUpdate extends Component {
                 labelWrap
                 wrapperCol={{ flex: 1 }}
                 colon={false}
-                initialValues={{name:name,price:price,desc:desc}}
+                initialValues={{name:name,price:price,desc:desc,pCategoryId:pCategoryId,categoryId:categoryId}}
                 
             >
             <Form.Item  label="商品名称" name="name" rules={[{ required: true,message: '商品名称不能为空'}]}>
@@ -170,8 +237,12 @@ class ProductAddUpdate extends Component {
             <Form.Item label="商品价格" name="price" rules={[{ required: true }]}>
                 <Input addonAfter="元"onChange={(e)=>this.setState({price:e.target.value})} style={{width:'650px'}} />
             </Form.Item>
-            <Form.Item label="所属分类" name="pCategoryId" rules={[{ required: true }]}>
-                <Cascader options={options} onChange={onChange} placeholder="Please select" style={{width:'650px'}}/>
+            <Form.Item label="所属父分类" name="pCategoryId" rules={[{ required: true }]}>
+                <Cascader options={poptions} onChange={this.onChangeParent} placeholder="Please select" style={{width:'650px'}}/>
+    
+            </Form.Item>
+            <Form.Item label="所属子分类" name="categoryId" rules={[{ required: true }]}>
+                <Cascader  options={options} onChange={this.onChangeOption} placeholder="Please select" style={{width:'650px'}}/>
     
             </Form.Item>
             <Form.Item label="商品图片" name="imgs" rules={[{ required: true }]}>

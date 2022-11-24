@@ -6,8 +6,7 @@ import jsonp from 'jsonp'
 //登陆
 export const reqLogin=(username,password)=>ajax('/api/login',{username,password},'POST')
 
-
-//获取一级或某个二级分类列表  reqCategorys  parentId为父级的id
+//6-获取一级或某个二级分类列表  reqCategorys  parentId为父级的id
 
 export const reqCategorys=(parentId)=>ajax('/api/manage/category/list',{parentId:parentId},'GET')
 
@@ -33,9 +32,6 @@ export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/cate
     |参数		|是否必选 |类型     |说明
     |categoryId    |Y       |string   |父级分类的ID */
 export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
-
-
-
 //10-获取商品列表
 /* ### 请求URL：
     http://localhost:5000/manage/product/list
@@ -46,8 +42,6 @@ export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{ca
     |pageNum    |Y       |Number   |页码
     |pageSize   |Y       |Number   |每页条目数 */
 export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
-
-
 
 
 //11-根据ID/Name搜索产品分页列表
@@ -86,6 +80,34 @@ export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs)=
 },'POST')
 
 
+/* ## 13. 更新商品
+### 请求URL：
+    http://localhost:5000/manage/product/update
+
+### 请求方式：
+    POST
+
+### 参数类型:
+    |参数		       |是否必选 |类型     |说明
+    |_id           |Y       |string   |商品ID
+    |categoryId    |Y       |string   |分类ID
+    |pCategoryId   |Y       |string   |父分类ID
+    |name          |Y       |string   |商品名称
+    |desc          |N       |string   |商品描述
+    |price         |N       |string   |商品价格
+    |detail        |N       |string   |商品详情
+    |imgs          |N       |array   |商品图片名数组 */
+
+export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail,imgs)=>ajax('/api/manage/product/update',{
+    _id:_id,
+    categoryId:categoryId,
+    pCategoryId:pCategoryId,
+    name:name,
+    desc:desc,
+    detail:detail,
+    price:price,
+    imgs:imgs
+},'POST')
 
 /* 
 ## 15. 上传图片
