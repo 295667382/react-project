@@ -34,8 +34,8 @@ class ProductAddUpdate extends Component {
         detail:'',
         categoryId:'',
         pCategoryId:'',
-        categoryname:'',
-        pCategoryname:'',
+        categoryName:'',
+        pCategoryName:'',
         options:[],
         poptions:[],
         _id:'',
@@ -56,7 +56,6 @@ class ProductAddUpdate extends Component {
         const {location}=this.props
         console.log("获取到的路由数据",location)
         const product=location.state.product
-        this.getcategoryId(product)
         if(product){
             this.setState({titleFlag:"修改商品",isAdd:false})     
         }else{
@@ -69,45 +68,14 @@ class ProductAddUpdate extends Component {
         const product=location.state.product
         console.log("product",product)
         //健壮性保证
-        const {_id,imgs,name,desc,price,detail,categoryId,pCategoryId}=product? product:[]
+        const {_id,imgs,name,desc,price,detail,categoryName,pCategoryName}=product? product:[]
         const pid=this.props.location.state.pid
        /*  this.getcategoryId(product) */
-        this.setState({imgs:imgs,name:name,desc:desc,price:price,detail:detail,_id:_id,categoryId:categoryId,pCategoryId:pid},()=>{ 
+        this.setState({imgs:imgs,name:name,desc:desc,price:price,detail:detail,_id:_id,categoryName:categoryName,pCategoryName:pCategoryName},()=>{ 
             
         })
     }
-    //获取默认分类
-    getcategoryId=async(product)=>{
-        //获取父分类
-        const response=await reqCategorys("0")
-        const {categoryId,pCategoryId}=product
-       // console.log("获取父分类response",response,"pCategoryId",pCategoryId)
-        if(response.status===0){
-            response.data.forEach((item)=>{
-                if(item._id===pCategoryId){
-                    console.log("成功获取")
-                    this.setState({pCategoryId:'zhangj'},()=>{
-                       
-                    })
-                }
-            })
-        }else{
-            console.log("获取父分类失败")
-        }
-        //获取子分类
-        const res=await reqCategorys(pCategoryId)
-        if(res.status===0){
-            res.data.forEach((item)=>{
-                if(item._id===categoryId){
-                    this.setState({categoryname:item.name})
-                   // console.log("获取到子分类，this.state.pCategoryname",this.state.categoryname)
-                }
-            })
-        }
-
-    }
-
-
+    
     getCatory=async()=>{
         const response=await reqIdGetCategory("0")
         const poptions=[]
@@ -128,6 +96,7 @@ class ProductAddUpdate extends Component {
     //=====父分类选择=====
     onChangeParent=async(value, selectedOptions)=>{
         console.log("父分类value:",value,"selectedOptions:",selectedOptions[0])
+        this.setState({pCategoryName:selectedOptions[0].value})
         //获取子列表
         const {_id,parentId}=selectedOptions[0]
         this.setState({pCategoryId:_id})
@@ -155,6 +124,7 @@ class ProductAddUpdate extends Component {
     //子分类获取
     onChangeOption=(value, selectedOptions)=>{
         console.log("子分类value:",value,"selectedOptions:",selectedOptions[0])
+        this.setState({categoryName:selectedOptions[0].value})
         const {_id,parentId}=selectedOptions[0]
         this.setState({ categoryId:_id})
     }
@@ -166,13 +136,13 @@ class ProductAddUpdate extends Component {
     //addProdcut添加商品
     addProduct=async()=>{
         const {isAdd}=this.state
-        const {categoryId,pCategoryId,name,desc,price,_id}=this.state
+        const {categoryId,pCategoryId,name,desc,price,_id,categoryName,pCategoryName}=this.state
         const detail=this.editor.current.getDetail()
         const imgs=this.pw.current.getImgs()
         if(isAdd){
             //添加商品
             // console.log("添加商品")
-            const response=await reqAddProduct(categoryId,pCategoryId,name,desc,price,detail,imgs)
+            const response=await reqAddProduct(categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)
             if(response.status===0){
                 message.success("添加商品成功")
                 this.props.navigate(-1)
@@ -181,7 +151,7 @@ class ProductAddUpdate extends Component {
         }else{
            
             //更新商品
-            const response=await reqUpdateProduct(_id,categoryId,pCategoryId,name,desc,price,detail,imgs)
+            const response=await reqUpdateProduct(_id,categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)
             if(response.status===0){
                 message.success("修改商品成功")
                 this.props.navigate(-1)
@@ -212,7 +182,7 @@ class ProductAddUpdate extends Component {
     const onFinishFailed=(errorInfo)=>{
       
     }
-    const {name,categoryname,pCategoryname,desc,price,detail,imgs,poptions,options,pCategoryId,categoryId}=this.state
+    const {name,categoryName,pCategoryName,desc,price,detail,imgs,poptions,options,pCategoryId,categoryId}=this.state
    
     return (
     <div>
@@ -226,7 +196,7 @@ class ProductAddUpdate extends Component {
                 labelWrap
                 wrapperCol={{ flex: 1 }}
                 colon={false}
-                initialValues={{name:name,price:price,desc:desc,pCategoryId:pCategoryId,categoryId:categoryId}}
+                initialValues={{name:name,price:price,desc:desc,categoryId:categoryName,pCategoryId:pCategoryName}}
                 
             >
             <Form.Item  label="商品名称" name="name" rules={[{ required: true,message: '商品名称不能为空'}]}>

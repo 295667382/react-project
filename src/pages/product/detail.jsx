@@ -32,8 +32,8 @@ export default function ProductDetail(){
         //获取父分类
         const response=await reqCategorys("0")
         const {categoryId,pCategoryId}=detailProduct
-        console.log("pCategoryId",pCategoryId)
-        console.log("categoryId",categoryId)
+        //console.log("pCategoryId",pCategoryId)
+        //console.log("categoryId",categoryId)
         if(response.status===0){
             response.data.forEach((item)=>{
                 if(item._id===pCategoryId){
@@ -58,7 +58,7 @@ export default function ProductDetail(){
     const clickBack=()=>{
         navigate("/product")
     }
-    console.log("detailProduct",detailProduct)
+    //console.log("detailProduct",detailProduct)
     const {name,desc,price,categoryId,imgs,detail,pCategoryId}=detailProduct
     const title=(
         <div>

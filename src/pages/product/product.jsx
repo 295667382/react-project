@@ -2,9 +2,8 @@ import React,{useEffect,useState} from 'react'
 import { SearchOutlined,PlusOutlined,ReloadOutlined } from '@ant-design/icons';
 import { useNavigate} from 'react-router-dom'
 import { Card,Select,Input,Button,Space,Table, Tag, message,Modal} from 'antd';
-import {reqGetProduct,reqSearchCategory,reqDeleteProduct,reqCategorys} from '../../api/index'
+import {reqGetProduct,reqSearchCategory,reqDeleteProduct,reqCategorys,reqchangeProductstatus} from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constantd'
-
 
 export default function Product() {
     const navigate = useNavigate()
@@ -18,17 +17,11 @@ export default function Product() {
         pageSize: PAGE_SIZE, 
       },
     });
-    
     const [SelectFlag,setSelectFlag] =useState([0])  //按商品名称搜索falg值为0，按商品描述搜索
-    const [keyword,setKeyword]=useState([])
-
-    
+    const [keyword,setKeyword]=useState([])  
     useEffect (()=>{
       loadData(tableParams)
-    },[tableParams])
-
-    
-    
+    },[tableParams]) 
   /*   把数组hotelList1合并hotelLis
     const newArr = hotelList.map(hotelItem => {
       const data = hotelList1.find(i => hotelItem.hotelId === i.hotelId)
@@ -38,8 +31,6 @@ export default function Product() {
       }
     }) */
 
-
-
    /*  |pageNum    |Y       |Number   |页码
     |pageSize   |Y       |Number   |每页条目数  */
     //首页加载数据
@@ -47,6 +38,7 @@ export default function Product() {
       const pageNum=tableParams.pagination.current
       const response=await reqGetProduct(pageNum,PAGE_SIZE)
       if(response.status===0){
+        console.log("response.data.list",response.data.list)
         setData(response.data.list)
         setTotal(response.data.total)
         message.success("更新列表成功")
@@ -55,7 +47,7 @@ export default function Product() {
       }
       
      })
-  
+
     //改变select选项框
     const handleChangeSelect=(value)=>{
       setSelectFlag(value)
@@ -91,11 +83,9 @@ export default function Product() {
           setTotal(response.data.total)
           setData(response.data.list)
           message.success(`查询到${response.data.total}条记录`)
-
         }else{
           message.error("查询失败")
         }
-       
       }
     }
     //刷新按钮
@@ -104,7 +94,6 @@ export default function Product() {
     }
     //更改页码
     const ChangePagination=(pagination, filters, sorter, extra)=>{
-    
       setTableParams({
         pagination,
         filters,
@@ -151,12 +140,25 @@ export default function Product() {
   const UpdateProduct=(product)=>{
     //console.log("编辑商品",product)
     return (()=>{
-      //console.log("product",product)
-      
       navigate("/product/addupdate",{state:{product:product,pid:'日用品'}})
     })
   }
-
+  //商品下架处置
+  const ClickRemove=(record)=>{
+      return (async()=>{
+        console.log("record",record)
+        const productId=record._id
+        const status=!record.status
+        /* |productId    |Y       |string   |商品名称
+        |status       |Y       |number   |商品状态值 */
+        const res =await reqchangeProductstatus(productId,status)
+        if(res.status===0){
+          //
+          loadData(tableParams)
+          
+        }
+      }) 
+  }
   //获取默认分类
   const getcategoryId=async(product)=>{
     //获取父分类
@@ -181,14 +183,11 @@ export default function Product() {
         res.data.forEach((item)=>{
             if(item._id===categoryId){
                 this.setState({categoryname:item.name})
-               // console.log("获取到子分类，this.state.pCategoryname",this.state.categoryname)
             }
         })
     }
 
 }
- 
-
     const title=(
       <div>
       <Select
@@ -228,6 +227,8 @@ export default function Product() {
         title: '商品名称',
         dataIndex: 'name',
         key: 'name',
+        width: 100,
+       
       },
       {
         title: '商品描述',
@@ -238,20 +239,24 @@ export default function Product() {
         title: '价格',
         dataIndex: 'price',
         key: 'price',
+        render:(price)=><span>¥{price}</span>
       },
       {
         title: '状态',
         key: 'action',
+        width: 150,
+        dataIndex: 'status',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="primary">下架</Button>
-            <p style={{marginTop:'10px'}}>在售</p>
-          </Space>
-        ),
+          <Button type="primary" onClick={ClickRemove(record)}>{record.status===1?'上架':'下架'}</Button>
+          <p style={{marginTop:'10px'}}>{record.status===1?'已下架':'在售'}</p>
+        </Space>
+        )
       },
       {
         title: '操作',
         key: 'action',
+        width: 150,
         render: (_, record) => (
           <Space size="middle">
             <a onClick={CheckDetail(record)}>详情</a>
@@ -269,7 +274,7 @@ export default function Product() {
     <Table columns={columns} 
     dataSource={data} 
     onChange={ChangePagination}
-    scroll={{y:280}}
+   
     pagination={{
       total:total,
       pageNum:tableParams.pagination.pageNum,

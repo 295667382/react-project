@@ -32,7 +32,7 @@ export default function Header()  {
   }); */
   useEffect(() => {
     async function fetchData() {
-      console.log("fetchData")
+      //console.log("fetchData")
       // You can await here
      /*  const response = await reqWeather(101010100) */
       // ...

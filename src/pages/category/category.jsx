@@ -90,12 +90,9 @@ export default class Category extends Component {
     const id =e
     if (id==='0') {
       this.setState({addselectCatory:'0'})
-     
     }else{
       this.setState({addselectCatory:id})
-    }
-    
-    
+    } 
   }
 
   //input框触发的事件
@@ -179,7 +176,7 @@ export default class Category extends Component {
    
     <Column
     title="操作"
-    key="action"
+    key="status"
     render={(_,record) => (
       <Space size="middle">
         <a onClick={this.updateCategory(record)}>修改分类名称 {record.lastName}</a>
@@ -208,7 +205,7 @@ export default class Category extends Component {
       <Modal title="修改类别" open={isUpdateModalOpen} onOk={this.handleUpdateOk} onCancel={this.handleUpdateCancel}>
       <Input onChange={this.handleUpdateChange} placeholder="请输入类别名称" key={listItem.name} defaultValue={listItem.name} />
       </Modal>
-   
+     
     
     </div>
     )

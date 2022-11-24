@@ -3,8 +3,82 @@ import ajax from "./ajax";
 import jsonp from 'jsonp'
 
 //const BASE=''
-//登陆
+//1-登陆
 export const reqLogin=(username,password)=>ajax('/api/login',{username,password},'POST')
+
+/* ## 2. 添加用户
+
+### 请求URL：
+	http://localhost:5000/manage/user/add
+
+### 请求方式：
+	POST
+
+### 参数类型
+	|参数		|是否必选 |类型     |说明
+	|username    |Y       |string   |用户名
+	|password    |Y       |string   |密码
+	|phone       |N       |string   |手机号
+	|email       |N       |string   |邮箱 
+    |role_id     |N       |string   |角色ID
+    */
+export const reqAddUser=(username,password,phone,email,role_id)=>ajax('/api/manage/user/add',
+    {username:username,
+    password:password,
+    phone:phone,
+    email:email,
+    role_id:role_id},'POST')
+
+
+/* 
+    ## 3. 更新用户
+    ### 请求URL：
+        http://localhost:5000/manage/user/update
+    
+    ### 请求方式：
+        POST
+    
+    ### 参数类型
+    
+        |参数		|是否必选 |类型     |说明
+        |_id         |Y       |string   |ID
+        |username    |N       |string   |用户名
+        |phone       |N       |string   |手机号
+        |email       |N       |string   |邮箱
+        |role_id     |N       |string   |角色ID */
+
+export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax('/api/manage/user/add',
+    {
+    _id:_id,
+    username:username,
+    phone:phone,
+    email:email,
+    role_id:role_id
+    },'POST')
+
+/* ## 4. 获取所有用户列表
+### 请求URL：
+	http://localhost:5000/manage/user/list
+
+### 请求方式：
+	GET */
+export const reqGetAllUsers=()=>ajax('/api/manage/user/list',{},'GET')
+
+/*     ## 5. 删除用户
+    ### 请求URL：
+        http://localhost:5000/manage/user/delete
+    
+    ### 请求方式：
+        POST
+    
+    ### 参数类型:
+    
+        |参数		|是否必选 |类型     |说明
+        |userId     |Y       |string   |用户ID     */
+export const reqDeleteUser=(userId)=>ajax('/api/manage/user/delete',
+    {userId:userId},'POST')
+
+    
 
 //6-获取一级或某个二级分类列表  reqCategorys  parentId为父级的id
 
@@ -69,14 +143,16 @@ export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax(
     |detail        |N       |string   |商品详情
     |imgs          |N       |array   |商品图片名数组 */
 
-export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs)=>ajax('/api/manage/product/add',{
+export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax('/api/manage/product/add',{
     categoryId:categoryId,
     pCategoryId:pCategoryId,
     name:name,
     desc:desc,
     detail:detail,
     price:price,
-    imgs:imgs
+    imgs:imgs,
+    categoryName:categoryName,
+    pCategoryName:pCategoryName
 },'POST')
 
 
@@ -98,7 +174,7 @@ export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs)=
     |detail        |N       |string   |商品详情
     |imgs          |N       |array   |商品图片名数组 */
 
-export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail,imgs)=>ajax('/api/manage/product/update',{
+export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax('/api/manage/product/update',{
     _id:_id,
     categoryId:categoryId,
     pCategoryId:pCategoryId,
@@ -106,8 +182,31 @@ export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail
     desc:desc,
     detail:detail,
     price:price,
-    imgs:imgs
+    imgs:imgs,
+    categoryName:categoryName,
+    pCategoryName:pCategoryName
 },'POST')
+
+/* ## 14. 对商品进行上架/下架处理
+### 请求URL：
+    http://localhost:5000/manage/product/updateStatus
+
+### 请求方式：
+    POST
+
+### 参数类型:
+
+    |参数		      |是否必选 |类型     |说明
+    |productId    |Y       |string   |商品名称
+    |status       |Y       |number   |商品状态值
+
+### 返回示例：
+    {
+      "status": 0
+    }
+ */
+ 
+export const reqchangeProductstatus=(productId,status)=>ajax('/api/manage/product/updateStatus',{productId:productId,status:status},'POST')
 
 /* 
 ## 15. 上传图片
@@ -121,10 +220,6 @@ export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail
 
     |参数		|是否必选 |类型     |说明
     |image  |Y       |文件   |图片文件 */
-
-//export const reqUploadPic=(image)=>ajax('/api/manage/img/upload',{image:image},'POST')
-
-
 
 
 
