@@ -47,10 +47,7 @@ class ProductAddUpdate extends Component {
         super(props);
         this.editor = React.createRef();
         this.pw = React.createRef();
-        
-            
-        
-      }
+    }
     componentDidMount(){
         this.getCatory()
         const {location}=this.props
@@ -65,6 +62,7 @@ class ProductAddUpdate extends Component {
     }
     componentWillMount () {
         const {location}=this.props
+        console.log("获取this.props",this.props)
         const product=location.state.product
         console.log("product",product)
         //健壮性保证

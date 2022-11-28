@@ -47,7 +47,7 @@ export const reqAddUser=(username,password,phone,email,role_id)=>ajax('/api/mana
         |email       |N       |string   |邮箱
         |role_id     |N       |string   |角色ID */
 
-export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax('/api/manage/user/add',
+export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax('/api/manage/user/update',
     {
     _id:_id,
     username:username,
