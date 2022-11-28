@@ -222,11 +222,43 @@ export const reqchangeProductstatus=(productId,status)=>ajax('/api/manage/produc
     |image  |Y       |文件   |图片文件 */
 
 
+/* 
+## 17. 添加角色
+
+    ### 请求URL：
+        http://localhost:5000/manage/role/add
+    
+    ### 请求方式：
+        POST
+    
+    ### 参数类型:
+        |参数		     |是否必选 |类型     |说明
+        |roleName    |Y       |string   |角色名称 */
+export const reqAddRole=(roleName)=>ajax('/api/manage/role/add',{roleName:roleName},'POST')
+
+
+
+/*   ## 18. 获取角色列表
+    ### 请求URL：
+        http://localhost:5000/manage/role/list
+    
+    ### 请求方式：
+        GET */
+export const reqGetRolelist=()=>ajax('/api/manage/role/list',{},'GET')
+
+
+
+
+
+
 
 //22-删除商品 /manage/product/delete
 export const reqDeleteProduct=(_id)=>ajax('/api/manage/product/delete',{_id:_id},'POST')
 
 
+
+//23）删除角色  http://localhost:5000/manage/role/delete POST _ID
+export const reqDeleteRole=(_id)=>ajax('/api/manage/role/delete',{_id:_id},'POST')
 
 //https://devapi.qweather.com/v7/weather/now?location=101010100&key=0c7e0798d4bc4525a418ac399b34637f
 export function reqWeather(city) { const url =
@@ -240,4 +272,4 @@ export function reqWeather(city) { const url =
     //const {dayPictureUrl, weather} = response.results[0].weather_data[0] resolve({dayPictureUrl, weather})
     } else { alert('获取天气信息失败')
     } })
-    }) }
+ }) }

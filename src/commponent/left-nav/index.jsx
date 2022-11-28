@@ -4,7 +4,7 @@ import { Button, Menu } from 'antd';
 import './index.less'
 import { Link, useNavigate,useLocation} from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
-import {items} from '../../config/menuConfig.js'
+import menuList from '../../config/menuConfig';
 
 function LeftNav(){
   const location = useLocation()
@@ -25,7 +25,7 @@ function LeftNav(){
         mode="inline"
         theme="dark"
         onClick={handleClick}
-        items={items}
+        items={menuList}
       /> 
     </div>
     )
