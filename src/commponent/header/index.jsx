@@ -11,43 +11,31 @@ import {reqWeather} from '../../api/index'
 export default function Header()  {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username,setUsername]=useState()
   const handleExit=()=>{
     setIsModalOpen(true);
   }
   const handleOk=()=>{
-    //.log("===handleOk===")
     memoryUtils.user={}
     storageUtils.removeUser() 
     navigate("/login") 
-    
   }
   const handleCancel=()=>{
     setIsModalOpen(false)
   }
-  // 相当于 componentDidMount 和 componentDidUpdate:
- /*  useEffect(async() => {
-    // 使用浏览器的 API 更新页面标题
-    const response =await reqLogin(101010100)
-    .log("reqLogin",reqLogin("101010100"))console
-  }); */
-  useEffect(() => {
-    async function fetchData() {
-      //console.log("fetchData")
-      // You can await here
-     /*  const response = await reqWeather(101010100) */
-      // ...
-    }
-    fetchData();
-   
-    
-  }, []);
-   
- 
+//获取user
+  const getUser=()=>{
+    const {username}=storageUtils.getUser()
+    setUsername(username)
 
+  }
+  useEffect(() => {
+    getUser() 
+  }, []);
     return (
       <div className='header'>
         <div className='header-top'>
-          <span>欢迎，admin</span>
+          <span>欢迎，{username}</span>
           <span className="quit" onClick={handleExit}>退出</span>
           <Modal  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         是否确认退出？

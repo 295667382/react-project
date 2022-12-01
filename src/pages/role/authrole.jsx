@@ -9,16 +9,13 @@ export default class Authrole extends Component {
                 title: '平台权限',
                 key: '-',
             }
-
         ],
-        
         checkedKeys:'',
         
     }
     //
     showSelectTree=()=>{
-        const {menus}=this.props.selectRole[0]
-        console.log("menus",menus)
+        const {menus}=this.props.selectRole
         this.state.checkedKeys=menus
     }
 
@@ -29,12 +26,14 @@ export default class Authrole extends Component {
     }
     constructor(props){
         super(props)
+        console.log(" constructor(props){")
         this.setTreeData()
         this.showSelectTree()
         
     }
-    /* shouldComponentUpdate(props){
-        console.log("shouldComponentUpdate",this.props)
+   /*  shouldComponentUpdate(nextProps,nextState){
+        console.log("shouldComponentUpdate","nextState",nextProps,"nextState",nextState)
+        return true
     } */
    
     onSelect=(selectedKeys, info)=>{
@@ -47,8 +46,8 @@ export default class Authrole extends Component {
             console.log("选择之后更新",this.state.checkedKeys)
         })
     }
-    checkedKeys=()=>{
-        
+    getcheckedKeys=()=>{
+        return this.state.checkedKeys
     }
 
     render() {

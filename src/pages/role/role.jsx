@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 import { Card,Button, Divider, Radio, Table,Modal,message,Space } from 'antd';
-import {reqGetRolelist,reqAddRole,reqDeleteRole} from '../../api/index'
+import {reqGetRolelist,reqAddRole,reqDeleteRole,reqUpdateRole} from '../../api/index'
 import Addrole from './addrole';
 import Authrole from './authrole';
+import storageUtils from '../../utils/storageUtils';
 
 export default class Role extends Component {
   constructor(props){
     super(props)
     this.addrole = React.createRef();
+    this.setauth = React.createRef();
   }
   state={
     roles:[], //定义全部角色的数组
-    selectRole:[], //定义被选中的数组
+    selectRole:{}, //定义被选中的数组
     disable:true,
     isaddRoleVisible:false,//添加校色的提示框
     deleteRoleVisible:false,//删除角色的提示框
@@ -59,7 +61,30 @@ export default class Role extends Component {
     this.setState({roleAuthVisible:true})
     
   }
-  handlesetAuthOk=()=>{
+  //确认设置角色权限    reqUpdateRole=(_id,menus,auth_time,auth_name
+  handlesetAuthOk=async()=>{
+    console.log("this.setauth",this.setauth)
+    console.log("this.roles",this.state.selectRole)
+    this.setState({roleAuthVisible:false})
+    const menus=this.setauth.current.getcheckedKeys()
+    const {_id}=this.state.selectRole
+    const auth_time=Date.parse(new Date());
+    console.log("auth_time",auth_time)
+    const {username}=storageUtils.getUser()
+    console.log("auth_name",username)
+    const res=await reqUpdateRole(_id,menus,auth_time,username)
+    console.log("res",res)
+    if(res.status===0){
+      this.getAllRolelist() 
+      //更新selectRole的值
+      this.setState({selectRole:{...this.state.selectRole,menus:menus}},()=>{
+        console.log("new",this.state.selectRole)
+      })
+     
+      
+      
+    }
+
     
   }
   handlesetAuthCancel=()=>{
@@ -136,7 +161,7 @@ export default class Role extends Component {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        this.setState({selectRole:selectedRows,disable:false})
+        this.setState({selectRole:selectedRows[0],disable:false})
       },
     };
     
@@ -163,7 +188,7 @@ export default class Role extends Component {
     </Modal>
 
     <Modal title="设置角色权限" destroyOnClose  open={roleAuthVisible} onOk={this.handlesetAuthOk} onCancel={this.handlesetAuthCancel}>
-        <Authrole selectRole={selectRole}/>
+        <Authrole ref={this.setauth} selectRole={selectRole}/>
     </Modal>
     
     </div>

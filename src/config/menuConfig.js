@@ -16,28 +16,25 @@ import {
   ProfileOutlined
 } from '@ant-design/icons';
 const  menuList = [
-  {
-    label: '首页',
-    title: '首页',
-    key:'/',
-    icon: <HomeOutlined />,
-    }, {
-    title: '商品',
-    label:'商品',
-    key: '/products',
-    icon: <MailOutlined />,
-    children: [ // 子菜单列表
     {
-    title: '品类管理', label: '品类管理',key: '/category', icon: <ProfileOutlined />
-    }, {
-    title: '商品管理',label: '商品管理', key: '/product', icon: <ShoppingCartOutlined />
-    }, ]
-    }, {
+    label: '首页',title: '首页', key:'/', icon: <HomeOutlined />,
+    }, 
+    {
+    title: '商品',label:'商品',key: '/products',icon: <MailOutlined />,
+    children:
+     [ // 子菜单列表
+      {title: '品类管理', label: '品类管理',key: '/category', icon: <ProfileOutlined />}, 
+      {title: '商品管理',label: '商品管理', key: '/product', icon: <ShoppingCartOutlined />}, 
+    ]}, 
+    {
     title: '用户管理',label: '用户管理', key: '/user', icon: <UserOutlined />
-    }, {
+    }, 
+    {
     title: '角色管理',label: '角色管理', key: '/role', icon: <SmileOutlined />,
     },
-    {title: '图形图表',label: '图形图表', key: '/charts', icon: <AreaChartOutlined />, children: [
+    {
+    title: '图形图表',label: '图形图表', key: '/charts', icon: <AreaChartOutlined />, 
+    children: [
       {
       title: '柱形图',label: '柱形图', key: '/charts/bar', icon: <BarChartOutlined />
       }, {

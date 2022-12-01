@@ -238,7 +238,7 @@ export const reqAddRole=(roleName)=>ajax('/api/manage/role/add',{roleName:roleNa
 
 
 
-/*   ## 18. 获取角色列表
+/*  ## 18. 获取角色列表
     ### 请求URL：
         http://localhost:5000/manage/role/list
     
@@ -246,9 +246,29 @@ export const reqAddRole=(roleName)=>ajax('/api/manage/role/add',{roleName:roleNa
         GET */
 export const reqGetRolelist=()=>ajax('/api/manage/role/list',{},'GET')
 
+/* ## 19. 更新角色(给角色设置权限)
+### 请求URL：
+    http://localhost:5000/manage/role/update
+
+### 请求方式：
+    POST
+
+### 参数类型:
+  
+    |参数		     |是否必选  |类型     |说明
+    |_id          |Y       |string   |角色ID
+    |menus        |Y       |array    |权限key数组
+    |auth_time    |Y       |number   |权限时间
+    |auth_name    |Y       |string   |权限人姓名 */
 
 
 
+export const reqUpdateRole=(_id,menus,auth_time,auth_name)=>ajax('/api/manage/role/update',{
+    _id:_id,
+    menus:menus,
+    auth_name:auth_name,
+    auth_time:auth_time
+},'POST')
 
 
 
