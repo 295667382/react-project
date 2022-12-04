@@ -2,9 +2,10 @@
 import ajax from "./ajax";
 import jsonp from 'jsonp'
 
-//const BASE=''
+/* const BASE='/api' */
+const BASE=''
 //1-登陆
-export const reqLogin=(username,password)=>ajax('/api/login',{username,password},'POST')
+export const reqLogin=(username,password)=>ajax(BASE+'/login',{username,password},'POST')
 
 /* ## 2. 添加用户
 
@@ -22,7 +23,7 @@ export const reqLogin=(username,password)=>ajax('/api/login',{username,password}
 	|email       |N       |string   |邮箱 
     |role_id     |N       |string   |角色ID
     */
-export const reqAddUser=(username,password,phone,email,role_id)=>ajax('/api/manage/user/add',
+export const reqAddUser=(username,password,phone,email,role_id)=>ajax(BASE+'/manage/user/add',
     {username:username,
     password:password,
     phone:phone,
@@ -47,7 +48,7 @@ export const reqAddUser=(username,password,phone,email,role_id)=>ajax('/api/mana
         |email       |N       |string   |邮箱
         |role_id     |N       |string   |角色ID */
 
-export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax('/api/manage/user/update',
+export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax(BASE+'/manage/user/update',
     {
     _id:_id,
     username:username,
@@ -62,7 +63,7 @@ export const reqUpdateUser=(_id,username,phone,email,role_id)=>ajax('/api/manage
 
 ### 请求方式：
 	GET */
-export const reqGetAllUsers=()=>ajax('/api/manage/user/list',{},'GET')
+export const reqGetAllUsers=()=>ajax(BASE+'/manage/user/list',{},'GET')
 
 /*     ## 5. 删除用户
     ### 请求URL：
@@ -75,25 +76,25 @@ export const reqGetAllUsers=()=>ajax('/api/manage/user/list',{},'GET')
     
         |参数		|是否必选 |类型     |说明
         |userId     |Y       |string   |用户ID     */
-export const reqDeleteUser=(userId)=>ajax('/api/manage/user/delete',
+export const reqDeleteUser=(userId)=>ajax(BASE+'/manage/user/delete',
     {userId:userId},'POST')
 
     
 
 //6-获取一级或某个二级分类列表  reqCategorys  parentId为父级的id
 
-export const reqCategorys=(parentId)=>ajax('/api/manage/category/list',{parentId:parentId},'GET')
+export const reqCategorys=(parentId)=>ajax(BASE+'/manage/category/list',{parentId:parentId},'GET')
 
 //删除分类类别 _id（_id）
-export const reqDeleteCategory=(_id)=>ajax('/api/manage/category/delete',{_id:_id},'POST')
+export const reqDeleteCategory=(_id)=>ajax(BASE+'/manage/category/delete',{_id:_id},'POST')
 
 //添加分类 reqAddCategory
-export const reqAddCategory= (parentId,categoryName)=>ajax('/api/manage/category/add',{parentId:parentId,categoryName:categoryName},'POST')
+export const reqAddCategory= (parentId,categoryName)=>ajax(BASE+'/manage/category/add',{parentId:parentId,categoryName:categoryName},'POST')
 
 //更新品类名称 reqUpdateCategory   
 //categoryId 父级分类的ID
 //categoryName  名称
-export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/category/update',{categoryId:categoryId,categoryName:categoryName},'POST')
+export const reqUpdateCategory=(categoryId,categoryName)=>ajax(BASE+'/manage/category/update',{categoryId:categoryId,categoryName:categoryName},'POST')
 
 
 
@@ -105,7 +106,7 @@ export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/cate
 ### 参数类型:
     |参数		|是否必选 |类型     |说明
     |categoryId    |Y       |string   |父级分类的ID */
-export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{categoryId:categoryId},'GET')
+export const reqIdGetCategory=(categoryId)=>ajax(BASE+'/manage/category/info',{categoryId:categoryId},'GET')
 //10-获取商品列表
 /* ### 请求URL：
     http://localhost:5000/manage/product/list
@@ -115,7 +116,7 @@ export const reqIdGetCategory=(categoryId)=>ajax('/api/manage/category/info',{ca
     |参数		|是否必选 |类型     |说明
     |pageNum    |Y       |Number   |页码
     |pageSize   |Y       |Number   |每页条目数 */
-export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
+export const reqGetProduct=(pageNum,pageSize)=>ajax(BASE+'/manage/product/list',{pageNum:pageNum,pageSize:pageSize},'GET')
 
 
 //11-根据ID/Name搜索产品分页列表
@@ -125,7 +126,7 @@ export const reqGetProduct=(pageNum,pageSize)=>ajax('/api/manage/product/list',{
 |productName   |N       |String   |根据商品名称搜索
 |productDesc   |N       |String   |根据商品描述搜索 */
 
-export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax('/api/manage/product/search',{pageNum:pageNum,pageSize:pageSize,productName:productName,productDesc:productDesc},'GET')
+export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax(BASE+'/manage/product/search',{pageNum:pageNum,pageSize:pageSize,productName:productName,productDesc:productDesc},'GET')
 /* ## 12. 添加商品
 ### 请求URL：
     http://localhost:5000/manage/product/add
@@ -143,7 +144,7 @@ export const reqSearchCategory=(pageNum,pageSize,productName,productDesc)=>ajax(
     |detail        |N       |string   |商品详情
     |imgs          |N       |array   |商品图片名数组 */
 
-export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax('/api/manage/product/add',{
+export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax(BASE+'/manage/product/add',{
     categoryId:categoryId,
     pCategoryId:pCategoryId,
     name:name,
@@ -174,7 +175,7 @@ export const reqAddProduct=(categoryId,pCategoryId,name,desc,price,detail,imgs,c
     |detail        |N       |string   |商品详情
     |imgs          |N       |array   |商品图片名数组 */
 
-export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax('/api/manage/product/update',{
+export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail,imgs,categoryName,pCategoryName)=>ajax(BASE+'/manage/product/update',{
     _id:_id,
     categoryId:categoryId,
     pCategoryId:pCategoryId,
@@ -206,7 +207,7 @@ export const reqUpdateProduct=(_id,categoryId,pCategoryId,name,desc,price,detail
     }
  */
  
-export const reqchangeProductstatus=(productId,status)=>ajax('/api/manage/product/updateStatus',{productId:productId,status:status},'POST')
+export const reqchangeProductstatus=(productId,status)=>ajax(BASE+'/manage/product/updateStatus',{productId:productId,status:status},'POST')
 
 /* 
 ## 15. 上传图片
@@ -234,7 +235,7 @@ export const reqchangeProductstatus=(productId,status)=>ajax('/api/manage/produc
     ### 参数类型:
         |参数		     |是否必选 |类型     |说明
         |roleName    |Y       |string   |角色名称 */
-export const reqAddRole=(roleName)=>ajax('/api/manage/role/add',{roleName:roleName},'POST')
+export const reqAddRole=(roleName)=>ajax(BASE+'/manage/role/add',{roleName:roleName},'POST')
 
 
 
@@ -244,7 +245,7 @@ export const reqAddRole=(roleName)=>ajax('/api/manage/role/add',{roleName:roleNa
     
     ### 请求方式：
         GET */
-export const reqGetRolelist=()=>ajax('/api/manage/role/list',{},'GET')
+export const reqGetRolelist=()=>ajax(BASE+'/manage/role/list',{},'GET')
 
 /* ## 19. 更新角色(给角色设置权限)
 ### 请求URL：
@@ -263,7 +264,7 @@ export const reqGetRolelist=()=>ajax('/api/manage/role/list',{},'GET')
 
 
 
-export const reqUpdateRole=(_id,menus,auth_time,auth_name)=>ajax('/api/manage/role/update',{
+export const reqUpdateRole=(_id,menus,auth_time,auth_name)=>ajax(BASE+'/manage/role/update',{
     _id:_id,
     menus:menus,
     auth_name:auth_name,
@@ -273,7 +274,7 @@ export const reqUpdateRole=(_id,menus,auth_time,auth_name)=>ajax('/api/manage/ro
 
 
 //22-删除商品 /manage/product/delete
-export const reqDeleteProduct=(_id)=>ajax('/api/manage/product/delete',{_id:_id},'POST')
+export const reqDeleteProduct=(_id)=>ajax(BASE+'/manage/product/delete',{_id:_id},'POST')
 
 
 
