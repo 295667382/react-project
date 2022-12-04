@@ -1,3 +1,4 @@
+import React, { Component } from 'react'
 import { PlusOutlined } from '@ant-design/icons';
 import { Card,Button,Space, Table, Tag, message,Modal,Input,Select } from 'antd';
 import './category.less'

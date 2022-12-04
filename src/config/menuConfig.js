@@ -115,4 +115,3 @@ export function getItem(label, key, icon, children, type) {
           type,
         };
       }
- */

@@ -3,7 +3,7 @@ import ajax from "./ajax";
 import jsonp from 'jsonp'
 
 /* const BASE='/api' */
-const BASE=''
+const BASE='/api'
 //1-登陆
 export const reqLogin=(username,password)=>ajax(BASE+'/login',{username,password},'POST')
 
@@ -32,7 +32,7 @@ export const reqAddUser=(username,password,phone,email,role_id)=>ajax(BASE+'/man
 
 
 /* 
-    ## 3. 更新用户
+    ## 3. 更新用
     ### 请求URL：
         http://localhost:5000/manage/user/update
     
@@ -281,50 +281,9 @@ export const reqDeleteProduct=(_id)=>ajax(BASE+'/manage/product/delete',{_id:_id
 //23）删除角色  http://localhost:5000/manage/role/delete POST _ID
 export const reqDeleteRole=(_id)=>ajax('/api/manage/role/delete',{_id:_id},'POST')
 
-//获取分类
-export const reqCategorys=(parentId)=>ajax('/api/manage/category/list',{parentId:parentId})
-
-//添加分类POST
-export const reqAddCategory=(parentId,categoryName)=>ajax('/api/manage/category/add',{parentId,categoryName},'POST')
-
-//删除分类
-export const reqDeleteCategory=(_id)=>ajax('/api/manage/category/delete',{_id:_id},'POST')
-
-//更新品类名称
-export const reqUpdateCategory=(categoryId,categoryName)=>ajax('/api/manage/category/update',{categoryId,categoryName},'POST')
 //https://devapi.qweather.com/v7/weather/now?location=101010100&key=0c7e0798d4bc4525a418ac399b34637f
-export function reqWeather(city,options) { 
-    const { timeout } = options;
+export function reqWeather(city) { const url =
    // `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p4 9MVra6urFRGOT9s8UBWr2`
-<<<<<<< HEAD
-   //`https://devapi.qweather.com/v7/weather/now?location=${city}&key=0c7e0798d4bc4525a418ac399b34637f`
-   return new Promise((resolve, reject) => {
-    let funcName = `jsonp${Date.now()}`
-    let time =  null, scriptNode;
-    window[funcName] = function(data) {
-        if (timeout) clearTimeout(time);
-        resolve(data);
-        // 很重要的性能优化点
-        // 清除本次请求产生的回调函数和script标签
-        delete window[funcName];
-        document.body.removeChild(scriptNode);
-      }
-      const url=`https://devapi.qweather.com/v7/weather/now?location=${city}&key=0c7e0798d4bc4525a418ac399b34637f`
-      scriptNode = document.createElement('script');
-      scriptNode.src = `${url}?callback=${funcName}`;
-      document.body.appendChild(scriptNode);
-      time = setTimeout(() => {
-        reject('network err, timeout')
-      }, timeout)
-      scriptNode.onerror = function(err) {
-        reject(err);
-      }
-   })
-}
-
-
-
-=======
    `https://devapi.qweather.com/v7/weather/now?location=${city}&key=0c7e0798d4bc4525a418ac399b34637f`
     return new Promise((resolve, reject) => { jsonp(url, {
     param: 'callback'
@@ -335,4 +294,3 @@ export function reqWeather(city,options) {
     } else { alert('获取天气信息失败')
     } })
  }) }
->>>>>>> temp
