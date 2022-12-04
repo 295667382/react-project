@@ -16,7 +16,11 @@ export default function Header()  {
   //判断在哪个页面
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
+<<<<<<< HEAD
   //点击退出，弹出确定按钮
+=======
+  const [username,setUsername]=useState()
+>>>>>>> temp
   const handleExit=()=>{
     setIsModalOpen(true);
   }
@@ -30,6 +34,7 @@ export default function Header()  {
   const handleCancel=()=>{
     setIsModalOpen(false)
   }
+<<<<<<< HEAD
 
   useEffect(() => {
     reqWeather(101010100,{
@@ -48,12 +53,26 @@ export default function Header()  {
   }, []);
    
  
+=======
+//获取user
+  const getUser=()=>{
+    const {username}=storageUtils.getUser()
+    setUsername(username)
+>>>>>>> temp
 
+  }
+  useEffect(() => {
+    getUser() 
+  }, []);
     return (
       
       <div className='header'>
         <div className='header-top'>
+<<<<<<< HEAD
           <span>欢迎，{user}</span>
+=======
+          <span>欢迎，{username}</span>
+>>>>>>> temp
           <span className="quit" onClick={handleExit}>退出</span>
           <Modal  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         是否确认退出？

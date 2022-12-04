@@ -1,22 +1,9 @@
-/* import React, { Component } from 'react'
-
-export default class Pie extends Component {
-  render() {
-    return (
-      <div>Pie</div>
-    )
-  }
-}
-
- */
-
-//http://localhost:5000/manage/img/upload
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, message, Upload } from 'antd';
 const props = {
-  name: 'image',
-  action: '/api/manage/img/upload',
+  name: 'file',
+  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
   headers: {
     authorization: 'authorization-text',
   },
@@ -30,11 +17,11 @@ const props = {
     }
   },
 };
-const Pie = () => (
+const Text = () => (
   <Upload {...props}>
 
     adasdas
     <Button icon={<UploadOutlined />}>Click to Upload</Button>
   </Upload>
 );
-export default Pie;
+export default Text;

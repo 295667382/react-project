@@ -6,7 +6,6 @@ export default class Time extends Component {
         sysYime:formateDate(Date.now())
       }
     componentDidMount(){
-        console.log(" componentDidMount")
         this.intervalId=setInterval(()=>{
             this.setState({sysYime:formateDate(Date.now())})
           },1000)

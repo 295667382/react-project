@@ -14,6 +14,11 @@ import Line from '../charts/line'
 import Pie from '../charts/pie'
 import Product from '../product/product';
 import User from '../user/user'
+import ProductDetail from '../product/detail';
+import ProductAddUpdate from '../product/add-update'
+
+import Text from '../text/text'
+
 
 const { Footer, Sider, Content } = Layout;
 
@@ -24,30 +29,46 @@ export default class admin extends Component {
     //实现不登陆不能进入到此页面
     MemoryUtils.user=storageUtils.getUser()
     const user= MemoryUtils.user
-    console.log("我现在的user._id",user._id)
     if(!user._id){
-        console.log("路由到登陆页面")
         return <Navigate to='/login'/>
         
     }
     return (
-        <Layout style={{height:'100%'}}>
-        <Sider>
-        <LeftNav />
-            
+        <Layout >
+        <Sider  
+        style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0,
+      }}>
+        <LeftNav />   
         </Sider>
-        <Layout>
-          <Header>Header</Header>
-          <Content style={{backgroundColor: 'white'}}>            
+        <Layout className="site-layout"
+          style={{
+            marginLeft: 200,
+          }}>
+          <Header  
+          style={{
+          padding: 0,
+        }}>Header</Header>
+          <Content style={{minHeight: '500px',backgroundColor: '#fafafa',padding:'20px',margin: '24px 16px 0',
+          overflow: 'initial',}}>            
           <Routes>
             <Route path="/home" element={<Home/>}></Route>
             <Route path="/category" element={<Category/>}></Route> 
+           {/*  product的主页面，更新页面及细节页面 */}
             <Route path="/product" element={<Product/>}></Route>
+            <Route path="product/detail" element={<ProductDetail/>}></Route> 
+            <Route path="product/addupdate" element={<ProductAddUpdate/>}></Route> 
             <Route path="/role" element={<Role/>}></Route>
             <Route path="/user" element={<User/>}></Route>
             <Route path="/charts/bar" element={<Bar/>}></Route>
             <Route path="/charts/Line" element={<Line/>}></Route>
             <Route path="/charts/Pie" element={<Pie/>}></Route>
+            <Route path="/text" element={<Text/>}></Route>
 
             </Routes>
           </Content>
