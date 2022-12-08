@@ -19,7 +19,9 @@ class App extends Component {
       <div className="app">
         <Routes>
           <Route path="/*" element={<Admin/>}></Route>
+         
           <Route path="/login" element={<Login/>}></Route>
+          
         </Routes>
       </div>
     );

@@ -6,12 +6,9 @@ import { Link, useNavigate,useLocation} from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
 import menuList from '../../config/menuConfig';
 import storageUtils from '../../utils/storageUtils';
-import {setHeadTitle} from '../../redux/actions'
-import {connect} from 'react-redux'
 
 
-function LeftNav(props){
-  console.log("props",props)
+function LeftNav(){
   const location = useLocation()
   const navigate = useNavigate()
   const [roleList,setRoleList]=useState([])
@@ -43,19 +40,15 @@ function LeftNav(props){
       }
     })
     console.log("menulist",menuList)
-    //获取show为true的值  
+    //获取show为true的值
+    
+    
+    
+    
   }
-  const handleClick=({ item, key, keyPath, domEvent })=>{
-    /* console.log("==============item===========",item,
-    "==============key==============:",key,"==============keyPath==============:",keyPath,"==============domEvent==============",domEvent) */
-    const {title}=item.props
-   /*  console.log("title",title) */
+  const handleClick=(e)=>{
+    const key=e.key
     navigate(key)
-    props.setHeadTitle(title)
-    
-    
-    
-
   }
     return (
     <div  className='left-nav'>
@@ -73,6 +66,4 @@ function LeftNav(props){
     </div>
     )
   }
-  export default connect(
-    state => ({user: state.user}), {setHeadTitle}
-    )(LeftNav)
+export default LeftNav;

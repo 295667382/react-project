@@ -8,7 +8,6 @@ import storageUtils from './utils/storageUtils';
 import memoryUtils from './utils/memoryUtils';
 
 import {Provider} from 'react-redux'
-import store from './redux/store'
 
 
 
@@ -21,9 +20,8 @@ memoryUtils.user=user
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Provider store={store}>
+   
       <App/>
-    </Provider>
     
     </BrowserRouter>
    

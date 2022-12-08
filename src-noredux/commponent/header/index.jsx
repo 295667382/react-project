@@ -7,11 +7,8 @@ import Time from '../Time/time'
 import storageUtils from '../../utils/storageUtils';
 import {reqWeather} from '../../api/index';
 import {menulist} from '../../config/menuConfig.js';
-import {connect} from 'react-redux'
 
-function Header(props)  {
- /*  console.log("===aaa=====props========",props) */
-  
+export default function Header()  {
   //动态获取user
   const user =memoryUtils.user.username
   const {pathname} = useLocation()
@@ -20,7 +17,6 @@ function Header(props)  {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [username,setUsername]=useState()
-  const [headTitle, setHeadTitle] = useState()
   const handleExit=()=>{
     setIsModalOpen(true);
   }
@@ -38,19 +34,11 @@ function Header(props)  {
   const getUser=()=>{
     const {username}=storageUtils.getUser()
     setUsername(username)
-  }
-  const getTitle=()=>{
-    const {headTitle}=props
-    setHeadTitle(headTitle)
+
   }
   useEffect(() => {
     getUser() 
   }, []);
-
-  useEffect(() => {
-    getTitle() 
-  }, [props]);
-
     return (
       
       <div className='header'>
@@ -63,7 +51,7 @@ function Header(props)  {
         </div>
         <div className='header-bottom'>
          <div className="header-bottom-left">
-          <span style={{fontSize:'17px',fontWeight:'bolder'}}>{headTitle}</span>
+          首页
          </div>
          <div className="header-bottom-right">
           <Time/>
@@ -77,8 +65,3 @@ function Header(props)  {
     )
   }
 
-  export default connect(
-    state => ({
-    user: state.user,
-    headTitle: state.headTitle })
-  )(Header)
