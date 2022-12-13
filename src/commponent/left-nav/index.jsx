@@ -46,8 +46,8 @@ function LeftNav(props){
     //获取show为true的值  
   }
   const handleClick=({ item, key, keyPath, domEvent })=>{
-    /* console.log("==============item===========",item,
-    "==============key==============:",key,"==============keyPath==============:",keyPath,"==============domEvent==============",domEvent) */
+    console.log("==============item===========",item,
+    "==============key==============:",key,"==============keyPath==============:",keyPath,"==============domEvent==============",domEvent)
     const {title}=item.props
    /*  console.log("title",title) */
     navigate(key)

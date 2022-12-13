@@ -17,7 +17,7 @@ import {
 } from '@ant-design/icons';
 const  menuList = [
     {
-    label: '首页',title: '首页', key:'/', icon: <HomeOutlined />,
+    label: '首页',title: '首页', key:'/home', icon: <HomeOutlined />,
     }, 
     {
     title: '商品',label:'商品',key: '/products',icon: <MailOutlined />,

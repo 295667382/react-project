@@ -69,7 +69,6 @@ export default class admin extends Component {
             <Route path="/charts/Line" element={<Line/>}></Route>
             <Route path="/charts/Pie" element={<Pie/>}></Route>
             <Route path="/text" element={<Text/>}></Route>
-
             </Routes>
           </Content>
           <Footer style={{textAlign: 'center', color: '#aaaaaa'}}>推荐使用谷歌浏览器，可以获得最佳页面操作体验</Footer>

@@ -17,7 +17,7 @@ function Login(){
             //console.log("登录成功 this.props.history",this.props)
             storageUtils.saveUser(response.data)
             message.info("登录成功")  
-            navigate('/')
+            navigate('/home')
           
            
             
